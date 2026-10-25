@@ -1,0 +1,1809 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fierros Gym</title>
+<meta name="description" content="Fierros Gym: gimnasio en Ciudad de México con app de socio, clases grupales, rutina y plan alimenticio personalizados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDEFEA; --surface:#FFFFFF; --surface-2:#F5F6F2; --ink:#17202A; --muted:#5A6570; --line:#D5D9D2;
+  --red:#C8102E; --blue:#1E56B0; --yellow:#C9960A; --green:#1F7A4B; --on-ink:#FFFFFF;
+  --red-soft:#F9E3E6; --yellow-soft:#FBF1D2; --green-soft:#DFF0E6; --blue-soft:#E1EAF8;
+  --display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#11161C; --surface:#1A2129; --surface-2:#212A33; --ink:#E8ECE5; --muted:#98A3AD; --line:#2D3742;
+    --red:#F0485E; --blue:#6B9BEA; --yellow:#F0C23A; --green:#46B97C; --on-ink:#11161C;
+    --red-soft:#3A1C22; --yellow-soft:#3A3117; --green-soft:#16332A; --blue-soft:#1B2A44;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11161C; --surface:#1A2129; --surface-2:#212A33; --ink:#E8ECE5; --muted:#98A3AD; --line:#2D3742;
+  --red:#F0485E; --blue:#6B9BEA; --yellow:#F0C23A; --green:#46B97C; --on-ink:#11161C;
+  --red-soft:#3A1C22; --yellow-soft:#3A3117; --green-soft:#16332A; --blue-soft:#1B2A44;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+img,svg{max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.02;margin:0;letter-spacing:.005em}
+h1{font-size:clamp(2.6rem,7vw,4.4rem)}
+h2{font-size:clamp(1.9rem,4.5vw,2.6rem)}
+h3{font-size:1.45rem}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* Shell */
+#top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 18px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:900;font-size:1.6rem;letter-spacing:.01em}
+.brand svg{width:34px;height:20px}
+#top .spacer{flex:1}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--on-ink);display:grid;place-items:center;font-weight:700;font-size:.9rem;border:0}
+.shell{display:grid;grid-template-columns:1fr;max-width:1180px;margin:0 auto}
+#side{display:none}
+main#view{padding:20px 18px 110px;min-width:0}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+#tabs button,#side button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:600;color:var(--muted);padding:6px 2px;border-radius:10px}
+#tabs button svg,#side button svg{width:22px;height:22px}
+#tabs button[aria-current="page"],#side button[aria-current="page"]{color:var(--ink)}
+#tabs button[aria-current="page"] svg{stroke:var(--ink)}
+body:not(.mode-app) #tabs,body:not(.mode-app) #side{display:none!important}
+body.mode-reg main#view{padding-bottom:40px}
+@media (min-width:900px){
+  .shell{grid-template-columns:220px 1fr}
+  #side{display:flex;flex-direction:column;gap:4px;padding:22px 12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);align-self:start}
+  #side button{flex-direction:row;gap:12px;font-size:.98rem;padding:10px 12px;justify-content:flex-start}
+  #side button[aria-current="page"]{background:var(--surface);box-shadow:inset 3px 0 0 var(--ink)}
+  #tabs{display:none}
+  main#view{padding:28px 28px 60px}
+  body.mode-reg .shell{grid-template-columns:1fr}
+}
+svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Blocks */
+.stack{display:grid;gap:18px}
+.grid2{display:grid;gap:18px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.panel.flat{background:var(--surface-2)}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.pagehead{display:grid;gap:6px;margin-bottom:18px}
+.pagehead p{max-width:60ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--ink);background:var(--ink);color:var(--on-ink);font-weight:700;padding:11px 18px;border-radius:10px;min-height:44px;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.danger{background:var(--red);border-color:var(--red);color:#fff}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:.88rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.link{background:none;border:0;padding:0;color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+.tag.green{background:var(--green-soft);border-color:transparent;color:var(--green)}
+.tag.yellow{background:var(--yellow-soft);border-color:transparent;color:var(--yellow)}
+.tag.red{background:var(--red-soft);border-color:transparent;color:var(--red)}
+.tag.blue{background:var(--blue-soft);border-color:transparent;color:var(--blue)}
+
+/* Alert banner */
+.alert{display:flex;gap:14px;align-items:center;flex-wrap:wrap;border-radius:14px;padding:14px 16px;margin-bottom:18px;border-left:6px solid}
+.alert.warn{background:var(--yellow-soft);border-color:var(--yellow)}
+.alert.bad{background:var(--red-soft);border-color:var(--red)}
+.alert p{flex:1 1 220px}
+.alert strong{display:block}
+
+/* Barbell membership */
+.membership{display:grid;gap:16px}
+.days-left{display:flex;align-items:baseline;gap:10px}
+.days-left b{font-family:var(--display);font-size:clamp(4rem,12vw,6rem);font-weight:900;line-height:.85}
+.days-left span{font-weight:600;color:var(--muted);max-width:14ch;line-height:1.25}
+.barbell{width:100%;height:auto;display:block}
+.barbell .plate{transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .4s}
+@media (prefers-reduced-motion:reduce){.barbell .plate{transition:none}}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;font-size:.95rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600}
+
+/* Forms */
+form{display:grid;gap:16px}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:14px}
+legend{font-family:var(--display);font-weight:800;font-size:1.45rem;margin-bottom:6px}
+.f{display:grid;gap:6px;font-weight:600;font-size:.92rem}
+.f input,.f select,.f textarea,input.in{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);min-height:44px}
+.f input:focus,.f select:focus,input.in:focus{border-color:var(--ink);outline:none}
+.fgrid{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.fgrid .full{grid-column:1/-1}
+@media (max-width:480px){.fgrid{grid-template-columns:1fr}}
+.choices{display:grid;gap:10px}
+.choices.c3{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice label{display:grid;gap:2px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;height:100%}
+.choice label b{font-weight:700}
+.choice label .price{font-family:var(--display);font-size:1.6rem;font-weight:800}
+.choice input:checked+label{border-color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.choice input:focus-visible+label{outline:3px solid var(--blue);outline-offset:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--ink)}
+.err{color:var(--red);font-weight:600;font-size:.9rem}
+
+/* Register hero */
+.reg{display:grid;gap:28px}
+@media (min-width:900px){.reg{grid-template-columns:1.05fr 1fr;align-items:start;gap:40px}.reg .hero{position:sticky;top:90px}}
+.hero{display:grid;gap:18px}
+.hero h1{max-width:12ch}
+.hero .lede{font-size:1.1rem;max-width:44ch}
+.features{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.features li{display:flex;gap:12px;align-items:flex-start}
+.features li i{flex:0 0 12px;height:12px;border-radius:3px;margin-top:6px}
+
+/* Day picker */
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+.days button{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 0 10px;display:grid;justify-items:center;gap:4px;font-weight:700}
+.days button small{font-weight:500;font-size:.72rem;color:var(--muted)}
+.days button .dot{width:7px;height:7px;border-radius:50%;background:transparent}
+.days button.train .dot{background:var(--blue)}
+.days button.today{border-color:var(--ink)}
+.days button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.days button[aria-pressed="true"] small{color:var(--on-ink);opacity:.8}
+.days button[aria-pressed="true"].train .dot{background:var(--on-ink)}
+
+/* Exercises */
+.exlist{list-style:none;margin:0;padding:0;display:grid}
+.ex{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.ex:first-child{border-top:0}
+.tick{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:transparent;display:grid;place-items:center;padding:0}
+.tick svg{width:16px;height:16px;opacity:0}
+.ex.done .tick{background:var(--green);border-color:var(--green);color:#fff}
+.ex.done .tick svg{opacity:1}
+.ex.done .exname{text-decoration:line-through;color:var(--muted)}
+.exname{font-weight:700}
+.exmeta{font-size:.88rem;color:var(--muted)}
+.progressbar{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.progressbar i{display:block;height:100%;background:var(--green);border-radius:999px;transition:width .3s}
+.finisher{margin-top:6px;padding:12px 14px;border-radius:12px;background:var(--blue-soft);color:var(--ink);font-weight:600}
+
+/* Meals */
+.meal{display:grid;gap:10px;padding:16px 0;border-top:1px solid var(--line)}
+.meal:first-of-type{border-top:0;padding-top:0}
+.meal header{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.meal .slot{font-size:.85rem;color:var(--muted);font-weight:600}
+.meal h4{margin:2px 0 0;font-size:1.05rem}
+.items{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:.95rem}
+.items dt{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;white-space:nowrap}
+.items dd{margin:0}
+.macros{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.macrobar{display:flex;height:12px;border-radius:999px;overflow:hidden;gap:2px}
+.macrobar i{display:block}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+
+/* Lists */
+.list{list-style:none;margin:0;padding:0;display:grid}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.shop li{justify-content:flex-start}
+.shop label{display:flex;gap:10px;align-items:center;flex:1}
+.shop input{width:18px;height:18px;accent-color:var(--green)}
+.shop input:checked+span{text-decoration:line-through;color:var(--muted)}
+
+/* Classes */
+.cls{display:grid;grid-template-columns:62px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.cls:first-child{border-top:0}
+.cls time{font-family:var(--display);font-size:1.5rem;font-weight:800;line-height:1}
+.spots{font-size:.82rem;color:var(--muted)}
+
+/* Water / attendance */
+.glasses{display:flex;gap:6px;flex-wrap:wrap}
+.glass{width:34px;height:42px;border:2px solid var(--blue);border-radius:4px 4px 10px 10px;background:transparent;padding:0;position:relative;overflow:hidden}
+.glass.full::after{content:"";position:absolute;inset:30% 0 0;background:var(--blue);opacity:.75}
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.heat i{aspect-ratio:1;border-radius:4px;background:var(--surface-2);border:1px solid var(--line)}
+.heat i.on{background:var(--green);border-color:var(--green)}
+.heat i.today{outline:2px solid var(--ink);outline-offset:1px}
+.stat{display:grid;gap:2px}
+.stat b{font-family:var(--display);font-size:2.4rem;font-weight:800;line-height:1}
+
+/* Plans */
+.svc{display:grid;gap:12px;align-content:start}
+.svc .price{font-family:var(--display);font-size:2.2rem;font-weight:800;line-height:1}
+.svc ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:.95rem}
+.svc.on{border-color:var(--green);box-shadow:inset 0 0 0 1.5px var(--green)}
+
+/* Member card */
+.card-id{background:var(--ink);color:var(--on-ink);border-radius:18px;padding:20px;display:grid;gap:14px;max-width:420px}
+.card-id .logo{font-size:1.5rem}
+.card-id .brand svg{color:var(--on-ink)}
+.barcode{height:54px;border-radius:6px;background:#fff;padding:6px 10px}
+.barcode div{height:100%;background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px,#111 4px 5px,transparent 5px 8px,#111 8px 11px,transparent 11px 13px,#111 13px 14px,transparent 14px 17px)}
+
+/* Locked */
+.locked{display:grid;gap:12px;justify-items:start;padding:28px;border:1.5px dashed var(--line);border-radius:16px;background:var(--surface)}
+
+/* Coach */
+.chat{display:grid;gap:12px;max-height:56vh;overflow-y:auto;padding:4px 2px}
+.bubble{max-width:85%;padding:12px 14px;border-radius:14px;white-space:pre-wrap;line-height:1.45}
+.bubble.u{justify-self:end;background:var(--ink);color:var(--on-ink);border-bottom-right-radius:4px}
+.bubble.a{justify-self:start;background:var(--surface-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.quick{display:flex;gap:8px;flex-wrap:wrap}
+.quick button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:.88rem;font-weight:600}
+.composer{display:flex;gap:8px}
+.composer input{flex:1}
+
+/* Chart */
+.chartwrap{overflow-x:auto}
+
+/* Dialog, toast, timer */
+dialog{border:0;border-radius:18px;padding:0;max-width:min(460px,calc(100vw - 24px));width:100%;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,14,18,.55)}
+.dlg{padding:22px;display:grid;gap:16px}
+.dlg .row.end{justify-content:flex-end}
+.moresheet{display:grid;gap:4px}
+.moresheet button{display:flex;align-items:center;gap:14px;background:none;border:0;padding:14px 8px;font-weight:600;font-size:1rem;border-radius:10px;text-align:left}
+.moresheet button svg{width:22px;height:22px}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--on-ink);padding:12px 18px;border-radius:12px;font-weight:600;z-index:50;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#timer{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--blue);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:700;display:none;align-items:center;gap:8px;font-variant-numeric:tabular-nums;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+#timer.on{display:flex}
+@media (min-width:900px){#toast,#timer{bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* ===== Marca y sitio ===== */
+:root{--band:#17202A;--band-ink:#EEF0EA;--band-muted:#A9B3BD;--band-line:rgba(255,255,255,.12);--hdr:var(--surface)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--band:#0A0E13}}
+:root[data-theme="dark"]{--band:#0A0E13}
+body.mode-site{--hdr:var(--band)}
+body::before{background:var(--hdr)}
+.logo{display:inline-flex;align-items:center;font-family:var(--display);font-weight:900;font-size:1.7rem;line-height:1;letter-spacing:.02em;white-space:nowrap;color:inherit}
+.logo .plate{display:inline-block;flex:none;width:.8em;height:.8em;margin:0 .03em 0 .05em;border-radius:50%;position:relative;background:radial-gradient(circle,#262C34 0 12%,#C9CFD6 12.5% 20%,#262C34 20.5% 24%,#D7192F 24.5% 66%,#A80F22 66.5% 72%,#D7192F 72.5%);box-shadow:inset 0 0 0 .04em rgba(0,0,0,.25)}
+.logo .plate::after{content:"";position:absolute;left:44%;top:8%;width:12%;height:13%;border-radius:2px;background:#fff}
+.logo .gym{font-size:.46em;background:#F2C230;color:#17202A;padding:.22em .38em .14em;border-radius:.22em;margin-left:.32em;transform:rotate(-7deg) translateY(-.42em);letter-spacing:.06em}
+.logo.intro .plate{animation:roll 1.2s cubic-bezier(.2,.85,.25,1) both}
+.logo.intro .gym{animation:stamp .45s 1s cubic-bezier(.2,.9,.3,1.4) both}
+@keyframes roll{from{transform:translateX(-4.6em) rotate(-560deg)}to{transform:none}}
+@keyframes stamp{from{transform:rotate(-7deg) translateY(-.42em) scale(2.4);opacity:0}to{transform:rotate(-7deg) translateY(-.42em) scale(1);opacity:1}}
+.logo-btn{all:unset;cursor:pointer;display:inline-flex;border-radius:8px}
+.logo-btn:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+body.mode-site #top{background:var(--band);color:var(--band-ink);border-bottom-color:var(--band-line)}
+.topnav{display:none;gap:2px;margin-left:18px}
+.topnav button{background:none;border:0;color:var(--band-ink);font-weight:600;padding:8px 10px;border-radius:8px;opacity:.85}
+.topnav button:hover{opacity:1;background:rgba(255,255,255,.08)}
+@media (min-width:1040px){.topnav{display:flex}.menu-btn{display:none!important}}
+.hide-sm{}
+@media (max-width:620px){.hide-sm{display:none!important}}
+.btn svg{width:18px;height:18px}
+.btn.yellow{background:#F2C230;border-color:#F2C230;color:#17202A}
+.btn.ink{background:#17202A;border-color:#17202A;color:#fff}
+.btn.light-ghost{background:transparent;border-color:rgba(255,255,255,.55);color:#fff}
+.round{width:46px;height:46px;flex:none;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:rgba(10,14,19,.4);color:#fff;display:grid;place-items:center;padding:0;text-decoration:none}
+.round svg{width:20px;height:20px}
+.round.dark{border-color:var(--line);background:var(--surface);color:var(--ink)}
+.round.wa{background:#25D366;border-color:#25D366}
+body.mode-site .shell{display:block;max-width:none}
+body.mode-site main#view{padding:0}
+.site{--pad:clamp(18px,4.5vw,56px)}
+.sec{padding:clamp(56px,8vw,104px) var(--pad);max-width:1240px;margin:0 auto}
+.band{background:var(--band);color:var(--band-ink)}
+.band .muted{color:var(--band-muted)}
+.band .tag{background:rgba(255,255,255,.08);border-color:transparent;color:inherit;justify-self:start}
+.band .link{color:#F2C230}
+.tint{background:var(--surface)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:30px}
+.sec-head p{max-width:52ch;margin-top:12px}
+.sec h2,.appsec h2{font-size:clamp(2.5rem,6vw,4.3rem);line-height:.92;max-width:16ch}
+.rail-ctl{display:flex;gap:8px}
+
+/* Hero */
+.hero-car{position:relative;background:var(--band);color:#fff;overflow:hidden}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.track::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;min-height:min(84vh,700px);display:flex;align-items:flex-end;overflow:hidden}
+.art{display:block;width:100%;height:100%}
+.slide .art{position:absolute;inset:0}
+.slide::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,19,0) 25%,rgba(10,14,19,.6) 58%,rgba(10,14,19,.95) 100%)}
+.slide .copy{position:relative;z-index:1;padding:0 var(--pad) 110px;max-width:760px;display:grid;gap:18px}
+.slide h1,.slide .h1{font-size:clamp(3.2rem,10vw,7.4rem);line-height:.86;color:#fff;max-width:11ch}
+.slide p{font-size:clamp(1.02rem,1.6vw,1.2rem);color:#DCE1E6;max-width:44ch}
+@media (min-width:900px){.slide{align-items:center}.slide::after{background:linear-gradient(90deg,rgba(10,14,19,.94) 0%,rgba(10,14,19,.62) 40%,rgba(10,14,19,0) 68%)}.slide .copy{padding-bottom:40px}}
+.car-ui{position:absolute;z-index:2;left:var(--pad);right:var(--pad);bottom:26px;display:flex;align-items:center;gap:10px}
+.dots{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+.dots button{width:34px;height:6px;border-radius:3px;border:0;background:rgba(255,255,255,.3);padding:0;transition:width .25s,background .25s}
+.dots button[aria-current="true"]{background:#F2C230;width:54px}
+.tdots button{background:var(--line)}
+.tdots button[aria-current="true"]{background:var(--ink)}
+.prog{position:absolute;top:0;left:0;right:0;height:4px;z-index:2;background:rgba(255,255,255,.1)}
+.prog i{display:block;height:100%;width:0;background:#F2C230}
+.prog.run i{animation:fill 7s linear forwards}
+@keyframes fill{to{width:100%}}
+
+/* Marquee */
+.marquee{background:#F2C230;color:#17202A;overflow:hidden;white-space:nowrap;border-block:3px solid #17202A}
+.marquee>div{display:inline-flex;gap:28px;padding:12px 0 10px;animation:mq 34s linear infinite;font-family:var(--display);font-weight:800;font-size:1.55rem}
+.marquee span{display:inline-flex;align-items:center;gap:28px}
+.marquee span::after{content:"";width:.62em;height:.62em;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 .18em rgba(0,0,0,.28)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:30px 20px}
+@media (min-width:900px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stats div{display:grid;gap:8px;border-top:5px solid var(--c);padding-top:16px}
+.stats b{font-family:var(--display);font-size:clamp(2.5rem,5.5vw,4.4rem);font-weight:900;line-height:.85;white-space:nowrap}
+
+/* Rails */
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:min(82%,360px);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 8px}
+.rail::-webkit-scrollbar{display:none}
+.rail.coaches{grid-auto-columns:min(72%,290px)}
+.railbar{height:4px;background:var(--band-line);border-radius:2px;margin-top:18px;overflow:hidden}
+.railbar i{display:block;height:100%;background:#F2C230;border-radius:2px;width:30%}
+.zone,.coach{scroll-snap-align:start}
+.zone button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;width:100%;height:100%;border-radius:18px;overflow:hidden;background:#1F2933;color:#EEF0EA}
+.zone button:focus-visible{outline:3px solid #F2C230;outline-offset:3px}
+.zone .pic{aspect-ratio:4/3;overflow:hidden}
+.zone .pic .art{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.zone button:hover .art{transform:scale(1.06)}
+.zone .cap,.coach .cap{padding:16px 18px 18px;display:grid;gap:6px;align-content:start}
+.zone .cap b,.coach .cap b{font-family:var(--display);font-size:1.7rem;font-weight:800;line-height:1}
+.zone .cap span{font-size:.93rem;color:var(--band-muted)}
+.coach{background:#1F2933;border-radius:18px;overflow:hidden;display:grid;grid-template-rows:auto 1fr}
+.coach .pic{aspect-ratio:10/11}
+.coach .link{justify-self:start}
+
+/* Clases */
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 6px}
+.chips::-webkit-scrollbar{display:none}
+.chips button,.seg button{flex:none;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 16px;font-weight:700;min-height:42px}
+.chips button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.cgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-top:18px}
+.ccard{display:grid;gap:12px;padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--c)}
+.ccard time{font-family:var(--display);font-size:2.3rem;font-weight:900;line-height:1}
+.meter{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--c)}
+
+/* App teaser */
+.appsec{display:grid;gap:40px;align-items:center}
+@media (min-width:900px){.appsec{grid-template-columns:1fr 1fr}}
+.feats{display:grid;gap:8px}
+.feat{display:grid;gap:2px;text-align:left;background:transparent;border:0;border-left:4px solid var(--line);padding:12px 16px;border-radius:0 12px 12px 0}
+.feat span{color:var(--muted);font-size:.93rem}
+.feat[aria-current="true"]{border-left-color:#D7192F;background:var(--bg)}
+.phone{width:min(300px,80vw);margin:0 auto;border-radius:44px;background:#0B0F14;padding:11px;box-shadow:0 30px 60px rgba(0,0,0,.3),inset 0 0 0 2px #2B333D;transform:rotate(-3deg)}
+.phone .scr{border-radius:34px;overflow:hidden;background:var(--bg);aspect-ratio:9/18.5;position:relative}
+.phone .track{height:100%}
+.notch{position:absolute;top:10px;left:50%;width:84px;height:22px;margin-left:-42px;background:#0B0F14;border-radius:12px;z-index:2}
+.ps{flex:0 0 100%;scroll-snap-align:start;padding:42px 14px 14px;display:grid;align-content:start;gap:10px;font-size:.8rem;line-height:1.35;overflow:hidden}
+.ps h4{font-family:var(--display);font-size:1.7rem;font-weight:900;margin:0;line-height:1}
+.ps .mini{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:2px}
+.exm{display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.tk{width:16px;height:16px;flex:none;border-radius:50%;border:2px solid var(--line)}
+.tk.on{background:var(--green);border-color:var(--green)}
+
+/* Planes */
+.cfg{display:grid;gap:22px}
+@media (min-width:960px){.cfg{grid-template-columns:1.5fr 1fr;align-items:start}}
+.pcards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.choice .badge{position:absolute;top:-11px;right:12px;background:#D7192F;color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px}
+.addons{display:grid;gap:10px}
+.addon{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);cursor:pointer}
+.addon:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.addon input{width:22px;height:22px;flex:none;accent-color:var(--ink);margin-top:1px}
+.summary{position:sticky;top:90px;background:var(--band);color:var(--band-ink);border-radius:22px;padding:24px;display:grid;gap:16px}
+.summary .kv dt{color:var(--band-muted)}
+.summary .total{font-family:var(--display);font-size:clamp(3.4rem,7vw,4.4rem);font-weight:900;line-height:.85}
+.summary .muted{color:var(--band-muted)}
+
+/* Calculadora */
+.calc{display:grid;gap:22px}
+@media (min-width:900px){.calc{grid-template-columns:1.1fr 1fr;align-items:start}}
+.out{display:grid;gap:14px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:24px}
+.out .kcal{font-family:var(--display);font-size:clamp(3.8rem,9vw,5.6rem);font-weight:900;line-height:.85}
+.out .kcal small{font-size:.32em;font-weight:800}
+
+/* Opiniones */
+.tslide{flex:0 0 100%;scroll-snap-align:start;padding:2px}
+.quote{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,4vw,44px);display:grid;gap:20px;height:100%}
+.quote blockquote{margin:0;font-size:clamp(1.15rem,2.5vw,1.65rem);line-height:1.38;font-weight:500;max-width:56ch}
+.who{display:flex;align-items:center;gap:12px}
+.ini{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:var(--c)}
+.stars{color:#E0A800;letter-spacing:3px;font-size:1.1rem}
+
+/* FAQ */
+.faq{display:grid;gap:10px;max-width:860px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 18px}
+.faq summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:700;display:flex;justify-content:space-between;gap:12px;font-size:1.05rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--display);font-size:1.7rem;line-height:.8;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 18px;color:var(--muted);max-width:65ch}
+
+/* Ubicación */
+.loc{display:grid;gap:26px}
+@media (min-width:900px){.loc{grid-template-columns:1.2fr 1fr;align-items:center}}
+.map{border-radius:20px;overflow:hidden;aspect-ratio:4/3}
+.map .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{from{transform:scale(.5);opacity:.6}to{transform:scale(1.7);opacity:0}}
+.hours{list-style:none;margin:0;padding:0;display:grid}
+.hours li{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--band-line)}
+.hours li.now{color:#F2C230;font-weight:700}
+.live{display:inline-flex;align-items:center;gap:10px;font-weight:700}
+.live i{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 0 5px rgba(255,255,255,.08)}
+
+/* CTA y footer */
+.cta-final{background:#D7192F;color:#fff}
+.cta-final h2{font-size:clamp(3rem,9vw,6.6rem);max-width:12ch}
+.cta-final p{font-size:1.15rem;margin:16px 0 24px;max-width:46ch}
+.foot{background:var(--band);color:var(--band-ink);padding:48px var(--pad) calc(100px + env(safe-area-inset-bottom,0px));overflow:hidden}
+.foot .muted{color:var(--band-muted)}
+.foot-grid{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.social{display:flex;gap:8px;flex-wrap:wrap}
+.bigword{font-family:var(--display);font-weight:900;font-size:clamp(5rem,23vw,19rem);line-height:.8;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.18);white-space:nowrap;margin-top:36px;letter-spacing:.01em}
+@media (min-width:900px){.foot{padding-bottom:48px}}
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;gap:10px;align-items:center;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--band);border-top:1px solid var(--band-line);transform:translateY(110%);transition:transform .3s}
+.mbar.show{transform:none}
+.mbar .btn{flex:1}
+.wa-fab{display:none}
+@media (min-width:900px){.mbar{display:none}.wa-fab{display:grid;place-items:center;position:fixed;right:24px;bottom:24px;width:60px;height:60px;border-radius:50%;background:#25D366;color:#fff;z-index:25;box-shadow:0 10px 30px rgba(0,0,0,.25)}.wa-fab svg{width:28px;height:28px}}
+
+/* Lightbox */
+dialog.lb{max-width:min(1000px,calc(100vw - 24px));background:#0B0F14;color:#fff}
+.lbpic{aspect-ratio:4/3;max-height:70vh}
+.lbcap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;flex-wrap:wrap}
+.lbcap b{font-family:var(--display);font-size:1.9rem;font-weight:800}
+.lbcap p{color:#C3CBD3;max-width:52ch}
+.regwrap .reg .hero .logo{font-size:2.4rem}
+
+@media (prefers-reduced-motion:reduce){.logo.intro .plate,.logo.intro .gym,.marquee>div,.map .pulse,.prog.run i{animation:none}.zone .pic .art{transition:none}}
+/* Admin */
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:4px;align-content:start}
+.kpi b{font-family:var(--display);font-size:2.3rem;font-weight:800;line-height:.95}
+.up{color:var(--green);font-weight:700}.down{color:var(--red);font-weight:700}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+.dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}.dot.green{background:var(--green)}.dot.blue{background:var(--blue)}
+.list.cob li,.list.soc li{align-items:flex-start}
+.list.cob li>div:last-child{flex:none}
+</style>
+</head>
+<body class="mode-site">
+<header id="top"></header>
+<div class="shell">
+  <nav id="side" aria-label="Secciones"></nav>
+  <main id="view"></main>
+</div>
+<nav id="tabs" aria-label="Secciones"></nav>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<button id="timer" type="button" aria-live="polite"></button>
+
+<script>
+(function(){
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '$' + Math.round(n).toLocaleString('es-MX');
+const pad = n => String(n).padStart(2,'0');
+const iso = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parseISO = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const wd = d => (d.getDay()+6)%7; // 0 = lunes
+const fmtDate = d => d.toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'});
+const fmtShort = d => d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+
+const ICON = {
+  inicio:'<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+  rutina:'<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>',
+  comidas:'<path d="M6 3v7a2 2 0 0 0 2 2v9M10 3v7M6 6h4M17 3c-2.2 1.6-3 4.4-3 7.5V13h3v8"/>',
+  clases:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  progreso:'<path d="M3 3v18h18M7 15l4-4 3 3 5-6"/>',
+  planes:'<path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
+  coach:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.3A8 8 0 1 1 21 12z"/>',
+  perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  mas:'<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>',
+  check:'<path d="M5 12.5 10 17 19 7"/>',
+  timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/>',
+  sitio:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
+  prev:'<path d="M15 5l-7 7 7 7"/>', next:'<path d="M9 5l7 7-7 7"/>', pause:'<path d="M9 5v14M15 5v14"/>', play:'<path d="M7 4l13 8-13 8z"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>', x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  pin:'<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  admin:'<path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  wa:'<path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.5L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.6z"/><path d="M9 8.6c.2 3.2 2.9 6 6.4 6.3l1-1.5-2-1-1 .8c-1.2-.5-2.2-1.5-2.8-2.8l.9-1-1-2z"/>'
+};
+const ic = (n,cls='i') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
+const NAV = [['inicio','Inicio'],['rutina','Rutina'],['comidas','Comidas'],['clases','Clases'],['progreso','Progreso'],['planes','Planes y pagos'],['coach','Coach'],['perfil','Perfil'],['sitio','Ver sitio web']];
+const TABS = ['inicio','rutina','comidas','clases'];
+
+/* ---------- Catálogo ---------- */
+const PLANS = {
+  mensual:{name:'Mensual',price:599,days:30,months:1,note:'Renueva cada mes'},
+  trimestral:{name:'Trimestral',price:1590,days:90,months:3,note:'Equivale a $530 al mes'},
+  anual:{name:'Anual',price:5490,days:365,months:12,note:'Equivale a $458 al mes'}
+};
+const SERVICES = {
+  rutina:{name:'Rutina personalizada',price:299,items:['Plan semanal según tu objetivo, nivel y días disponibles','Series, repeticiones y descansos por ejercicio','Marcar ejercicios completados y cronómetro de descanso']},
+  nutri_basico:{name:'Plan alimenticio básico',price:349,items:['Menú de 7 días con comida mexicana','Calorías ajustadas a tu cuerpo y objetivo','Porciones en gramos y piezas']},
+  nutri_pro:{name:'Plan alimenticio Pro',price:599,items:['Todo lo del plan básico','Proteína, carbohidratos y grasa por comida','Lista del súper semanal con cantidades']}
+};
+const GOALS = {
+  grasa:{name:'Perder grasa',sets:3,reps:'12–15',rest:60,fin:'Cierre de cardio: 20 min en caminadora inclinada a paso firme',kcal:-400},
+  musculo:{name:'Ganar músculo',sets:4,reps:'8–12',rest:90,fin:null,kcal:300},
+  acond:{name:'Acondicionamiento',sets:3,reps:'12, en circuito',rest:45,fin:'Cierre: HIIT en bici, 10 min alternando 30 s fuerte y 30 s suave',kcal:0}
+};
+const LEVELS = {principiante:'Principiante',intermedio:'Intermedio',avanzado:'Avanzado'};
+const DAYS = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const DS = ['L','M','M','J','V','S','D'];
+const TRAIN_MAP = {3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
+const SPLITS = {3:['fullA','fullB','fullC'],4:['torsoA','piernaA','torsoB','piernaB'],5:['empuje','jalon','piernaA','hombroBrazo','piernaB'],6:['empuje','jalon','piernaA','torsoB','piernaB','hombroBrazo']};
+const TEMPL = {
+  fullA:{t:'Cuerpo completo A',e:['Sentadilla con barra','Press de banca con barra','Remo con barra','Press militar con mancuernas','Plancha']},
+  fullB:{t:'Cuerpo completo B',e:['Peso muerto rumano','Press inclinado con mancuernas','Jalón al pecho','Zancadas con mancuernas','Elevación de piernas colgado']},
+  fullC:{t:'Cuerpo completo C',e:['Sentadilla goblet','Hip thrust','Remo con mancuerna a una mano','Lagartijas','Pallof press']},
+  torsoA:{t:'Torso A',e:['Press de banca con barra','Remo con barra','Press militar con mancuernas','Jalón al pecho','Curl con barra','Extensión de tríceps en polea']},
+  piernaA:{t:'Pierna A',e:['Sentadilla con barra','Peso muerto rumano','Prensa de pierna','Curl femoral','Elevación de talones','Plancha']},
+  torsoB:{t:'Torso B',e:['Press inclinado con mancuernas','Remo sentado en polea','Elevaciones laterales','Dominadas asistidas','Curl martillo','Press francés']},
+  piernaB:{t:'Pierna B y glúteo',e:['Hip thrust','Zancadas con mancuernas','Extensión de cuádriceps','Curl femoral','Pallof press','Crunch en polea']},
+  empuje:{t:'Empuje: pecho, hombro y tríceps',e:['Press de banca con barra','Press inclinado con mancuernas','Press militar con mancuernas','Elevaciones laterales','Fondos asistidos','Extensión de tríceps en polea']},
+  jalon:{t:'Jalón: espalda y bíceps',e:['Jalón al pecho','Remo con barra','Remo sentado en polea','Face pull','Curl con barra','Curl martillo']},
+  hombroBrazo:{t:'Hombro, brazo y core',e:['Press militar con mancuernas','Elevaciones laterales','Pájaros con mancuernas','Curl con barra','Press francés','Crunch en polea']}
+};
+const REPS_OVERRIDE = {'Plancha':'40 s','Pallof press':'12 por lado','Zancadas con mancuernas':'10 por pierna','Elevación de talones':'15–20','Remo con mancuerna a una mano':'10 por lado','Elevación de piernas colgado':'10–12'};
+
+const M_DES = [
+  {n:'Avena con plátano y crema de cacahuate',i:[['Avena',60,'g'],['Leche descremada',250,'ml'],['Plátano',1,'pza'],['Crema de cacahuate',15,'g']],k:470,p:20,c:68,f:13},
+  {n:'Huevos a la mexicana con tortillas',i:[['Huevo',3,'pza'],['Jitomate, cebolla y chile',100,'g'],['Tortilla de maíz',2,'pza'],['Aguacate',30,'g']],k:450,p:23,c:35,f:23},
+  {n:'Chilaquiles verdes horneados con pollo',i:[['Totopo horneado',40,'g'],['Salsa verde',100,'ml'],['Pechuga de pollo',80,'g'],['Queso fresco',30,'g']],k:440,p:33,c:38,f:15},
+  {n:'Molletes integrales con pico de gallo',i:[['Pan integral',2,'pza'],['Frijoles refritos sin manteca',80,'g'],['Queso panela',50,'g'],['Pico de gallo',60,'g']],k:430,p:24,c:52,f:12},
+  {n:'Licuado de proteína con avena y fresas',i:[['Proteína en polvo',30,'g'],['Leche descremada',250,'ml'],['Avena',30,'g'],['Fresas',100,'g']],k:420,p:38,c:50,f:7},
+  {n:'Omelette de claras con espinaca y papaya',i:[['Claras de huevo',5,'pza'],['Huevo',1,'pza'],['Espinaca',60,'g'],['Queso panela',40,'g'],['Pan integral',1,'pza'],['Papaya',150,'g']],k:400,p:40,c:32,f:11},
+  {n:'Hot cakes de avena con yogur griego',i:[['Avena',50,'g'],['Huevo',2,'pza'],['Plátano',1,'pza'],['Miel',10,'g'],['Yogur griego natural',100,'g']],k:480,p:27,c:66,f:12}
+];
+const M_COL = [
+  {n:'Yogur griego con nuez',i:[['Yogur griego natural',150,'g'],['Nuez',10,'g']],k:200,p:16,c:9,f:11},
+  {n:'Manzana con crema de cacahuate',i:[['Manzana',1,'pza'],['Crema de cacahuate',15,'g']],k:180,p:4,c:26,f:8},
+  {n:'Jícama y pepino con cacahuates',i:[['Jícama y pepino',200,'g'],['Cacahuate natural',20,'g']],k:190,p:7,c:22,f:10},
+  {n:'Atún sobre galletas de arroz',i:[['Atún en agua',60,'g'],['Galleta de arroz',2,'pza']],k:170,p:17,c:16,f:3}
+];
+const M_COM = [
+  {n:'Pechuga a la plancha con arroz y verduras',i:[['Pechuga de pollo',150,'g'],['Arroz cocido',150,'g'],['Verduras al vapor',150,'g'],['Aceite de oliva',10,'ml']],k:600,p:52,c:50,f:18},
+  {n:'Tacos de bistec con nopales asados',i:[['Bistec de res magro',150,'g'],['Tortilla de maíz',4,'pza'],['Nopales',150,'g'],['Salsa roja',50,'ml']],k:640,p:45,c:60,f:22},
+  {n:'Salmón con camote y ensalada',i:[['Salmón',150,'g'],['Camote',200,'g'],['Ensalada verde',150,'g']],k:650,p:38,c:50,f:30},
+  {n:'Caldo de pollo con verduras y arroz',i:[['Pechuga de pollo',150,'g'],['Verduras para caldo',250,'g'],['Arroz cocido',100,'g'],['Tortilla de maíz',2,'pza'],['Aguacate',30,'g']],k:620,p:45,c:65,f:16},
+  {n:'Picadillo de res con arroz',i:[['Carne molida 90/10',150,'g'],['Papa y zanahoria',150,'g'],['Arroz cocido',120,'g']],k:650,p:42,c:55,f:27},
+  {n:'Pescado a la veracruzana con arroz',i:[['Filete de pescado blanco',180,'g'],['Salsa veracruzana',120,'g'],['Arroz cocido',150,'g'],['Ensalada verde',100,'g']],k:600,p:45,c:60,f:18},
+  {n:'Pasta integral con pollo y pesto',i:[['Pasta integral cocida',180,'g'],['Pechuga de pollo',130,'g'],['Pesto',20,'g'],['Jitomate cherry',100,'g']],k:670,p:48,c:70,f:20}
+];
+const M_CEN = [
+  {n:'Tostadas de tinga de pollo',i:[['Tostada horneada',3,'pza'],['Tinga de pollo',120,'g'],['Frijoles refritos sin manteca',60,'g'],['Lechuga',50,'g']],k:480,p:35,c:48,f:15},
+  {n:'Ensalada de atún con aguacate',i:[['Atún en agua',120,'g'],['Verduras mixtas',200,'g'],['Aguacate',50,'g'],['Galleta integral',4,'pza']],k:450,p:35,c:30,f:20},
+  {n:'Quesadillas de champiñón con panela',i:[['Tortilla de maíz',3,'pza'],['Queso panela',80,'g'],['Champiñones',100,'g'],['Salsa verde',50,'ml']],k:470,p:30,c:50,f:16},
+  {n:'Sándwich integral de pavo',i:[['Pan integral',2,'pza'],['Pechuga de pavo',100,'g'],['Queso panela',40,'g'],['Aguacate',40,'g'],['Lechuga y jitomate',60,'g']],k:480,p:36,c:42,f:18},
+  {n:'Bowl de arroz con huevo y verduras',i:[['Arroz cocido',120,'g'],['Huevo',2,'pza'],['Verduras salteadas',150,'g'],['Aceite de oliva',5,'ml']],k:470,p:22,c:52,f:18},
+  {n:'Fajitas de pollo con pimiento',i:[['Pechuga de pollo',140,'g'],['Pimiento y cebolla',150,'g'],['Tortilla de maíz',3,'pza']],k:500,p:42,c:50,f:13},
+  {n:'Bowl de yogur griego con frutos rojos',i:[['Yogur griego natural',200,'g'],['Avena',30,'g'],['Frutos rojos',100,'g'],['Almendras',15,'g']],k:460,p:28,c:50,f:16}
+];
+const CLASSES = [
+  {id:'spin-l',name:'Spinning',day:0,time:'07:00',coach:'Karla',cap:20},
+  {id:'box-l',name:'Box',day:0,time:'19:00',coach:'Iván',cap:14},
+  {id:'func-m',name:'Funcional',day:1,time:'08:00',coach:'Diego',cap:16},
+  {id:'hiit-m',name:'HIIT',day:1,time:'20:00',coach:'Mariana',cap:18},
+  {id:'spin-x',name:'Spinning',day:2,time:'19:00',coach:'Karla',cap:20},
+  {id:'yoga-x',name:'Yoga y movilidad',day:2,time:'09:00',coach:'Sofía',cap:15},
+  {id:'func-j',name:'Funcional',day:3,time:'08:00',coach:'Diego',cap:16},
+  {id:'box-j',name:'Box',day:3,time:'19:00',coach:'Iván',cap:14},
+  {id:'hiit-v',name:'HIIT',day:4,time:'18:00',coach:'Mariana',cap:18},
+  {id:'yoga-s',name:'Yoga y movilidad',day:5,time:'09:00',coach:'Sofía',cap:15},
+  {id:'spin-s',name:'Spinning',day:5,time:'10:30',coach:'Karla',cap:20}
+];
+
+/* ---------- Sitio promocional ---------- */
+const PHONE = '525500000000';
+const wa = msg => 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(msg);
+const HOURS = [[5,23],[5,23],[5,23],[5,23],[5,23],[7,20],[8,14]];
+const reduced = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const logo = (cls='') => `<span class="logo ${cls}" role="img" aria-label="Fierros Gym"><span aria-hidden="true">FIERR</span><i class="plate" aria-hidden="true"></i><span aria-hidden="true">S</span><b class="gym" aria-hidden="true">GYM</b></span>`;
+const SITE_LINKS = [['s-instalaciones','Instalaciones'],['s-clases','Clases'],['s-app','App de socio'],['s-planes','Planes'],['s-coaches','Coaches'],['s-ubicacion','Ubicación']];
+const CLS_COLOR = {'Spinning':'#D7192F','Box':'#1E56B0','Funcional':'#1F8A55','HIIT':'#E0A800','Yoga y movilidad':'#7A5BA8'};
+
+let uid = 0;
+const P = {red:'#D7192F',blue:'#1E56B0',yellow:'#F2C230',green:'#1F8A55',steel:'#C9CFD6',dark:'#262C34'};
+const FONT = `font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900"`;
+function svgOpen(bg){ const id = 'ht' + (++uid); return `<svg class="art" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><defs><pattern id="${id}" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.2" fill="#fff" opacity=".07"/></pattern></defs><rect width="800" height="600" fill="${bg}"/><rect width="800" height="600" fill="url(#${id})"/>`; }
+function plate(cx,cy,r,col,label){ return `<g><circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}"/><circle cx="${cx}" cy="${cy}" r="${r*.92}" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="${r*.03}"/><circle cx="${cx}" cy="${cy}" r="${r*.7}" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="4"/><circle cx="${cx}" cy="${cy}" r="${r*.21}" fill="${P.dark}"/><circle cx="${cx}" cy="${cy}" r="${r*.13}" fill="${P.steel}"/><circle cx="${cx}" cy="${cy}" r="${r*.07}" fill="${P.dark}"/><text x="${cx}" y="${cy-r*.38}" text-anchor="middle" ${FONT} font-size="${r*.27}" fill="#fff">${label}</text><text x="${cx}" y="${cy+r*.56}" text-anchor="middle" ${FONT} font-size="${r*.12}" letter-spacing="${r*.02}" fill="#fff" opacity=".85">FIERROS</text></g>`; }
+function kettleShape(col,num){ return `<path d="M300 300 C300 150 500 150 500 300" fill="none" stroke="${col}" stroke-width="54" stroke-linecap="round"/><circle cx="400" cy="390" r="175" fill="${col}"/><path d="M285 330 A150 150 0 0 1 380 235" fill="none" stroke="#fff" stroke-opacity=".15" stroke-width="16" stroke-linecap="round"/><text x="400" y="445" text-anchor="middle" ${FONT} font-size="150" fill="${P.yellow}">${num}</text>`; }
+const ART = {
+  plates: () => svgOpen('#141B23') + `<ellipse cx="460" cy="588" rx="430" ry="26" fill="#000" opacity=".35"/>` + plate(230,390,175,P.yellow,'15') + plate(420,350,215,P.blue,'20') + plate(615,330,250,P.red,'25') + `</svg>`,
+  barbell: () => {
+    let s = svgOpen('#0E2A55') + `<text x="400" y="330" text-anchor="middle" ${FONT} font-size="300" fill="#fff" opacity=".06">200</text><rect x="0" y="526" width="800" height="74" fill="#000" opacity=".28"/><rect x="30" y="372" width="740" height="14" rx="7" fill="${P.steel}"/>`;
+    const side = (x,dir) => { const ps = [[P.red,300,46],[P.red,300,46],[P.blue,270,40],[P.yellow,230,34]]; let o = '', cur = x;
+      for (const [c,h,w] of ps) { const rx = dir < 0 ? cur - w : cur; o += `<rect x="${rx}" y="${379-h/2}" width="${w}" height="${h}" rx="8" fill="${c}"/><rect x="${rx+w*.18}" y="${379-h/2+12}" width="${w*.12}" height="${h-24}" rx="3" fill="#fff" opacity=".2"/>`; cur += dir*(w+4); } return o; };
+    s += `<rect x="226" y="362" width="18" height="34" rx="4" fill="#8C949D"/><rect x="556" y="362" width="18" height="34" rx="4" fill="#8C949D"/>` + side(222,-1) + side(578,1);
+    for (let i = 0; i < 36; i++) s += `<circle cx="${60 + (i*137)%680}" cy="${536 + (i*53)%54}" r="${2 + i%4}" fill="#fff" opacity=".16"/>`;
+    return s + '</svg>'; },
+  kettle: () => svgOpen('#5E0B18') + `<g fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="3"><circle cx="400" cy="390" r="230"/><circle cx="400" cy="390" r="290"/><circle cx="400" cy="390" r="350"/></g><ellipse cx="400" cy="572" rx="210" ry="20" fill="#000" opacity=".35"/>` + kettleShape(P.dark,'24') + `</svg>`,
+  bike: () => { let s = svgOpen('#0E2A55'); for (let i = 0; i < 5; i++) s += `<rect x="${30+i*12}" y="${170+i*62}" width="${200-i*22}" height="12" rx="6" fill="#fff" opacity=".16"/>`;
+    return s + `<rect x="200" y="520" width="480" height="24" rx="12" fill="${P.dark}"/><circle cx="560" cy="420" r="120" fill="${P.red}"/><circle cx="560" cy="420" r="86" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="6"/><path d="M330 520 L380 250 M380 300 L560 420 M560 420 L612 230 M380 300 L520 300" stroke="${P.steel}" stroke-width="30" stroke-linecap="round" fill="none"/><circle cx="560" cy="420" r="26" fill="${P.dark}"/><rect x="300" y="205" width="140" height="34" rx="17" fill="${P.dark}"/><path d="M590 222 L690 202 Q722 198 722 228" stroke="${P.dark}" stroke-width="22" stroke-linecap="round" fill="none"/></svg>`; },
+  bag: () => svgOpen('#141B23') + `<path d="M400 0 V118" stroke="${P.steel}" stroke-width="10" stroke-dasharray="18 8"/><path d="M335 150 L400 112 L465 150" stroke="${P.steel}" stroke-width="6" fill="none"/><path d="M250 250 q-40 90 0 180" stroke="#fff" stroke-opacity=".3" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M205 220 q-55 120 0 240" stroke="#fff" stroke-opacity=".18" stroke-width="8" fill="none" stroke-linecap="round"/><rect x="300" y="140" width="200" height="390" rx="80" fill="${P.red}"/><rect x="300" y="212" width="200" height="22" fill="#000" opacity=".2"/><rect x="300" y="448" width="200" height="22" fill="#000" opacity=".2"/><text x="400" y="358" text-anchor="middle" ${FONT} font-size="64" fill="#fff" transform="rotate(-90 400 340)">FIERROS</text><polygon points="560,300 600,270 595,320 650,320 605,345 640,390 590,370 570,420 555,365 510,380 540,340 505,310 555,318" fill="${P.yellow}"/><ellipse cx="400" cy="580" rx="140" ry="14" fill="#000" opacity=".35"/></svg>`,
+  rack: () => { let s = svgOpen('#1B2430') + `<rect x="80" y="520" width="640" height="40" rx="6" fill="#5B3B22"/><rect x="250" y="520" width="300" height="40" fill="#7A5230"/><rect x="200" y="60" width="34" height="460" fill="${P.dark}"/><rect x="566" y="60" width="34" height="460" fill="${P.dark}"/><rect x="190" y="50" width="420" height="30" rx="4" fill="${P.dark}"/>`;
+    for (let y = 104; y < 510; y += 26) s += `<circle cx="217" cy="${y}" r="4" fill="#8C949D"/><circle cx="583" cy="${y}" r="4" fill="#8C949D"/>`;
+    s += `<rect x="170" y="370" width="460" height="10" rx="5" fill="#8C949D"/><rect x="30" y="222" width="740" height="12" rx="6" fill="${P.steel}"/>`;
+    s += `<rect x="120" y="103" width="40" height="250" rx="7" fill="${P.red}"/><rect x="82" y="118" width="34" height="220" rx="7" fill="${P.blue}"/><rect x="640" y="103" width="40" height="250" rx="7" fill="${P.red}"/><rect x="684" y="118" width="34" height="220" rx="7" fill="${P.blue}"/>`;
+    return s + `<text x="400" y="470" text-anchor="middle" ${FONT} font-size="44" fill="#fff" opacity=".12">FIERROS</text></svg>`; },
+  rope: () => svgOpen('#0F3B28') + `<rect x="0" y="500" width="800" height="100" fill="#000" opacity=".22"/><rect x="30" y="230" width="40" height="300" rx="8" fill="${P.dark}"/><circle cx="70" cy="300" r="22" fill="${P.steel}"/><path d="M70 290 C170 170 230 410 330 290 S 490 170 590 290 S 750 410 840 290" fill="none" stroke="${P.yellow}" stroke-width="24" stroke-linecap="round"/><path d="M70 312 C170 432 230 192 330 312 S 490 432 590 312 S 750 192 840 312" fill="none" stroke="${P.red}" stroke-width="24" stroke-linecap="round"/><g transform="translate(520 330) scale(.4)">${kettleShape(P.dark,'16')}</g></svg>`,
+  yoga: () => svgOpen('#123B44') + `<circle cx="540" cy="250" r="160" fill="${P.yellow}" opacity=".92"/><g stroke="#fff" stroke-opacity=".18" stroke-width="6" stroke-linecap="round"><path d="M80 380 H300"/><path d="M130 420 H360"/><path d="M500 440 H760"/></g><ellipse cx="180" cy="210" rx="22" ry="62" fill="${P.green}" transform="rotate(-30 180 210)"/><ellipse cx="225" cy="190" rx="18" ry="52" fill="#2FAF6E" transform="rotate(10 225 190)"/><ellipse cx="150" cy="260" rx="16" ry="44" fill="${P.green}" transform="rotate(-70 150 260)"/><path d="M160 500 L640 500 L720 572 L80 572 Z" fill="${P.red}"/><path d="M160 500 L640 500 L650 512 L150 512Z" fill="#000" opacity=".15"/><g transform="translate(590 470)"><rect width="150" height="56" rx="28" fill="${P.blue}"/><circle cx="150" cy="28" r="28" fill="#2C6AD0"/><circle cx="150" cy="28" r="12" fill="#17428A"/></g></svg>`,
+  dumbs: () => { let s = svgOpen('#1B2430') + `<text x="400" y="160" text-anchor="middle" ${FONT} font-size="120" fill="#fff" opacity=".06">2 A 50 KG</text><rect x="40" y="290" width="720" height="18" rx="6" fill="#3A4753"/><rect x="40" y="470" width="720" height="18" rx="6" fill="#3A4753"/><rect x="60" y="290" width="16" height="290" fill="#3A4753"/><rect x="724" y="290" width="16" height="290" fill="#3A4753"/>`;
+    const cols = [P.red,P.blue,P.yellow,P.green];
+    const hex = (cx,cy,r) => Array.from({length:6},(_,k) => { const a = Math.PI/3*k + Math.PI/6; return (cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1); }).join(' ');
+    [[290,0],[470,1]].forEach(([y,row]) => { for (let i = 0; i < 4; i++) { const r = 28 + i*5 + row*4, cx = 145 + i*170, cy = y - r, c = cols[(i+row)%4];
+      s += `<rect x="${cx-34}" y="${cy-7}" width="68" height="14" rx="5" fill="${P.steel}"/><polygon points="${hex(cx-40,cy,r)}" fill="${P.dark}"/><polygon points="${hex(cx+40,cy,r)}" fill="${P.dark}"/><circle cx="${cx-40}" cy="${cy}" r="${r*.45}" fill="none" stroke="${c}" stroke-width="6"/><circle cx="${cx+40}" cy="${cy}" r="${r*.45}" fill="none" stroke="${c}" stroke-width="6"/>`; } });
+    return s + '</svg>'; }
+};
+function portrait(c){
+  const hairBack = c.style === 'long' ? `<path d="M68 120 C60 56 180 56 172 120 L180 206 C150 194 90 194 60 206Z" fill="${c.hair}"/>` : c.style === 'bun' ? `<circle cx="120" cy="58" r="24" fill="${c.hair}"/>` : '';
+  const front = {
+    long:`<path d="M72 116 C68 72 94 58 120 58 C148 58 174 72 168 116 C158 96 140 86 120 88 C100 86 82 96 72 116Z" fill="${c.hair}"/>`,
+    bun:`<path d="M72 112 C70 74 96 62 120 62 C146 62 170 74 168 112 C156 92 140 86 120 88 C100 86 84 92 72 112Z" fill="${c.hair}"/>`,
+    short:`<path d="M70 124 C62 70 92 56 122 56 C154 56 178 74 170 122 C164 98 148 84 122 86 C96 84 80 96 70 124Z" fill="${c.hair}"/>`,
+    buzz:`<path d="M74 108 C74 76 96 64 120 64 C144 64 166 76 166 108 C150 92 90 92 74 108Z" fill="${c.hair}" opacity=".9"/>`,
+    cap:`<path d="M70 104 C70 58 170 58 170 104Z" fill="${P.red}"/><rect x="118" y="96" width="84" height="13" rx="6" fill="${P.red}"/><circle cx="120" cy="66" r="5" fill="#fff" opacity=".6"/>`
+  }[c.style];
+  return `<svg class="art" viewBox="0 0 240 264" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><rect width="240" height="264" fill="${c.bg}"/><circle cx="196" cy="62" r="96" fill="#fff" opacity=".08"/><circle cx="196" cy="62" r="34" fill="#fff" opacity=".08"/>${hairBack}<path d="M26 264 C34 204 78 184 120 184 C162 184 206 204 214 264Z" fill="${c.shirt}"/><rect x="104" y="156" width="32" height="38" rx="10" fill="${c.skin}"/><ellipse cx="120" cy="118" rx="46" ry="54" fill="${c.skin}"/>${front}<circle cx="156" cy="232" r="11" fill="${P.yellow}"/><circle cx="156" cy="232" r="3.5" fill="${c.shirt}"/></svg>`;
+}
+function mapArt(){
+  let s = `<svg class="art" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa ilustrativo de la ubicación de Fierros Gym"><rect width="800" height="600" fill="#1F2933"/>`;
+  for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) s += `<rect x="${c*104+14}" y="${r*104+14}" width="86" height="86" rx="10" fill="#26323D"/>`;
+  s += `<rect x="430" y="118" width="190" height="190" rx="14" fill="#1F5A3E"/><path d="M0 560 L800 80" stroke="#2F3B47" stroke-width="14"/><path d="M0 316 H800" stroke="#3A4753" stroke-width="22"/><path d="M412 0 V600" stroke="#3A4753" stroke-width="26"/>`;
+  s += `<text x="22" y="302" font-size="16" fill="#8C97A3" font-family="Figtree, sans-serif">Avenida principal</text>`;
+  s += `<circle class="pulse" cx="412" cy="316" r="60" fill="#D7192F" opacity=".25"/><circle cx="412" cy="316" r="30" fill="#D7192F"/><circle cx="412" cy="316" r="10" fill="${P.dark}"/><circle cx="412" cy="316" r="5" fill="${P.steel}"/>`;
+  s += `<rect x="452" y="248" width="176" height="46" rx="10" fill="${P.yellow}"/><text x="540" y="279" text-anchor="middle" ${FONT} font-size="25" fill="#17202A">FIERROS GYM</text></svg>`;
+  return s;
+}
+
+const SLIDES = [
+  {a:'plates',h:'Levanta más que pesas',p:'Discos de competencia, racks olímpicos y coaches que corrigen tu técnica desde el primer día.'},
+  {a:'bike',h:'Clases que se sienten',p:'Spinning, box, HIIT, funcional y yoga toda la semana. Reserva tu lugar desde el celular.'},
+  {a:'kettle',h:'Tu plan, en tu bolsillo',p:'Al inscribirte tienes app de socio: rutina día por día, menú, avisos de pago y progreso.'},
+  {a:'barbell',h:'Tu primer día va por nuestra cuenta',p:'Entrena gratis un día, conoce las instalaciones y recibe una evaluación con un coach.'}
+];
+const ZONES = [
+  {t:'Peso libre',d:'Mancuernas de 2 a 50 kg, bancos ajustables y espejos de piso a techo.',a:'dumbs'},
+  {t:'Racks olímpicos',d:'Seis racks con plataforma, barras olímpicas y discos de competencia.',a:'rack'},
+  {t:'Cardio y spinning',d:'Salón de spinning con 20 bicis, caminadoras y escaladoras.',a:'bike'},
+  {t:'Ring de box',d:'Ring, costales y peras. Te prestamos guantes en tu primera clase.',a:'bag'},
+  {t:'Zona funcional',d:'Cuerdas de batalla, kettlebells, trineo y pasto sintético.',a:'rope'},
+  {t:'Yoga y movilidad',d:'Un salón tranquilo para estirar, respirar y recuperarte.',a:'yoga'}
+];
+const COACHES = [
+  {n:'Karla Méndez',key:'Karla',r:'Spinning y cardio',bio:'Diez años dando ciclismo indoor. Sus playlists tienen fila de espera.',bg:P.red,shirt:'#17202A',skin:'#C68B59',hair:'#2B1A10',style:'long'},
+  {n:'Iván Torres',key:'Iván',r:'Box',bio:'Ex boxeador amateur. Enseña técnica desde cero, sin golpes innecesarios.',bg:P.blue,shirt:'#17202A',skin:'#8D5524',hair:'#111111',style:'buzz'},
+  {n:'Diego Ramírez',key:'Diego',r:'Fuerza y funcional',bio:'Especialista en sentadilla, peso muerto y press. Te hace fuerte sin lesionarte.',bg:'#1F8A55',shirt:'#17202A',skin:'#E0AC69',hair:'#3A2414',style:'cap'},
+  {n:'Mariana Ortiz',key:'Mariana',r:'HIIT',bio:'Sesiones cortas e intensas que se adaptan a tu nivel en tiempo real.',bg:'#C9960A',shirt:'#17202A',skin:'#F1C27D',hair:'#5A3A1A',style:'bun'},
+  {n:'Sofía Herrera',key:'Sofía',r:'Yoga y movilidad',bio:'Te ayuda a recuperarte mejor, dormir mejor y moverte sin dolor.',bg:'#123B44',shirt:P.red,skin:'#C68B59',hair:'#1A0F08',style:'short'}
+];
+const TESTI = [
+  {n:'Laura G.',res:'−9 kg en 4 meses',q:'Llegué sin saber usar una barra. Con la rutina en la app y las correcciones de Diego hoy hago sentadilla con 60 kg.'},
+  {n:'Ricardo P.',res:'Socio desde hace un año',q:'Las clases de box de Iván son lo mejor de mi semana, y el aviso de pago me ha salvado de quedarme sin acceso.'},
+  {n:'Fernanda C.',res:'Su primer medio maratón',q:'Combiné spinning con el plan de comidas Pro. La lista del súper me ahorra tiempo cada domingo.'},
+  {n:'Jorge M.',res:'+6 kg de masa muscular',q:'El plan alimenticio es comida normal: tacos, caldos, tortillas. Por fin pude ser constante.'}
+];
+const FAQ = [
+  ['¿Hay cuota de inscripción?','No. Solo pagas tu membresía y, si quieres, los servicios de rutina o plan alimenticio.'],
+  ['¿Qué incluye el día de prueba?','Acceso a todas las áreas durante un día, una clase grupal a tu elección y una evaluación de 20 minutos con un coach.'],
+  ['¿Puedo congelar mi membresía?','Sí, hasta 30 días al año por viaje o incapacidad. Solo avisa en recepción.'],
+  ['¿Hay regaderas y lockers?','Sí. Vestidores con regaderas, lockers de día y agua purificada sin costo.'],
+  ['¿Necesito experiencia?','No. Tu rutina se arma con tu nivel y los coaches de piso te enseñan cada ejercicio.'],
+  ['¿Cómo funciona la app de socio?','Al inscribirte entras a tu panel: rutina por día, menú, pagos con avisos de vencimiento, reservas de clases y progreso.']
+];
+
+let siteDay = (() => { const t = wd(today()); for (let k = 0; k < 7; k++) { const d = (t+k)%7; if (CLASSES.some(c => c.day === d)) return d; } return t; })(), siteCoach = '';
+let cfg = {plan:'trimestral', rutina:true, nutri:''};
+let calc = {sex:'hombre', age:28, weight:75, height:172, goal:'grasa', days:4};
+let heroTimer = null, heroIdx = 0, heroPaused = false, firstLoad = true, lbI = 0, regPreset = {};
+
+function openNow(){
+  const n = new Date(), d = wd(n), [a,b] = HOURS[d], m = n.getHours()*60 + n.getMinutes();
+  if (m >= a*60 && m < b*60) return {open:true, text:`Abierto ahora, cerramos a las ${b}:00`};
+  if (m < a*60) return {open:false, text:`Cerrado, abrimos hoy a las ${pad(a)}:00`};
+  return {open:false, text:`Cerrado, abrimos mañana a las ${pad(HOURS[(d+1)%7][0])}:00`};
+}
+
+function vSitio(){
+  const o = openNow();
+  return `<div class="site">
+  <section class="hero-car" data-car="hero" aria-roledescription="carrusel" aria-label="Presentación de Fierros Gym">
+    <div class="prog"><i></i></div>
+    <div class="track">${SLIDES.map((s,i) => `<article class="slide" aria-roledescription="diapositiva" aria-label="${i+1} de ${SLIDES.length}">${ART[s.a]()}<div class="copy">${i === 0 ? `<h1>${s.h}</h1>` : `<h2 class="h1">${s.h}</h2>`}<p>${s.p}</p><div class="row"><button class="btn yellow" data-act="trial">Prueba un día gratis</button><button class="btn light-ghost" data-scroll="s-planes">Ver planes</button></div></div></article>`).join('')}</div>
+    <div class="car-ui"><div class="dots">${SLIDES.map((s,i) => `<button data-act="car-go" data-i="${i}" aria-label="Ver: ${esc(s.h)}" aria-current="${i===0}"></button>`).join('')}</div>
+      <button class="round" data-act="car-pause" aria-label="Pausar carrusel">${ic('pause')}</button><button class="round hide-sm" data-act="car-prev" aria-label="Anterior">${ic('prev')}</button><button class="round hide-sm" data-act="car-next" aria-label="Siguiente">${ic('next')}</button></div>
+  </section>
+  <div class="marquee" aria-hidden="true"><div>${Array(2).fill(['Sin cuota de inscripción','Abierto desde las 5:00','Primer día gratis','App de socio incluida','40+ clases por semana','Coaches en piso todo el día'].map((t,i) => `<span style="--c:${['#D7192F','#1E56B0','#1F8A55','#17202A'][i%4]}">${t}</span>`).join('')).join('')}</div></div>
+
+  <section class="sec" id="s-por-que">
+    <div class="sec-head"><div><h2>Un gimnasio hecho para entrenar en serio</h2><p class="muted">Equipo de competencia, horarios amplios y gente que te ayuda a mejorar cada semana.</p></div></div>
+    <div class="stats">${[['1,200 m²','de entrenamiento en dos pisos','#D7192F'],['40+','clases grupales cada semana','#1E56B0'],['5:00','abrimos de lunes a viernes','#E0A800'],['8','coaches en piso todo el día','#1F8A55']].map(s => `<div style="--c:${s[2]}"><b class="num">${s[0]}</b><span class="muted">${s[1]}</span></div>`).join('')}</div>
+  </section>
+
+  <div class="band" id="s-instalaciones"><section class="sec">
+    <div class="sec-head"><div><h2>Instalaciones</h2><p class="muted">Desliza para recorrer el gym. Toca una zona para verla en grande.</p></div><div class="rail-ctl"><button class="round" data-act="rail-prev" aria-label="Zonas anteriores">${ic('prev')}</button><button class="round" data-act="rail-next" aria-label="Más zonas">${ic('next')}</button></div></div>
+    <div class="rail" data-rail>${ZONES.map((z,i) => `<div class="zone"><button data-act="lb" data-i="${i}" aria-label="Ver ${esc(z.t)} en grande"><div class="pic">${ART[z.a]()}</div><div class="cap"><b>${z.t}</b><span>${z.d}</span></div></button></div>`).join('')}</div>
+    <div class="railbar"><i></i></div>
+  </section></div>
+
+  <section class="sec" id="s-clases">
+    <div class="sec-head"><div><h2>Horario de clases</h2><p class="muted">Clases de 50 minutos incluidas en tu membresía. Elige un día.</p></div></div>
+    <div id="site-classes">${siteClasses()}</div>
+  </section>
+
+  <div class="tint" id="s-app"><section class="sec">${siteApp()}</section></div>
+
+  <section class="sec" id="s-planes">
+    <div class="sec-head"><div><h2>Arma tu plan</h2><p class="muted">Elige tu membresía y agrega los servicios que quieras. El total se calcula al momento.</p></div></div>
+    ${siteCfg()}
+  </section>
+
+  <div class="tint" id="s-calc"><section class="sec">
+    <div class="sec-head"><div><h2>¿Cuánto deberías comer?</h2><p class="muted">Calcula tus calorías y macros en 10 segundos. Gratis, sin registrarte.</p></div></div>
+    ${siteCalc()}
+  </section></div>
+
+  <div class="band" id="s-coaches"><section class="sec">
+    <div class="sec-head"><div><h2>Los coaches</h2><p class="muted">Ellos dan las clases y están en piso para ayudarte.</p></div><div class="rail-ctl"><button class="round" data-act="rail-prev" aria-label="Coaches anteriores">${ic('prev')}</button><button class="round" data-act="rail-next" aria-label="Más coaches">${ic('next')}</button></div></div>
+    <div class="rail coaches" data-rail>${COACHES.map(c => `<article class="coach"><div class="pic">${portrait(c)}</div><div class="cap"><b>${c.n}</b><span class="tag">${c.r}</span><p class="small">${c.bio}</p><button class="link" data-act="scoach" data-k="${c.key}">Ver sus clases</button></div></article>`).join('')}</div>
+    <div class="railbar"><i></i></div>
+  </section></div>
+
+  <section class="sec" id="s-opiniones">
+    <div class="sec-head"><div><h2>Lo que dicen los socios</h2></div></div>
+    <div class="tcar" data-car="testi"><div class="track">${TESTI.map((t,i) => `<div class="tslide"><figure class="quote"><div class="stars" role="img" aria-label="5 de 5 estrellas">★★★★★</div><blockquote>“${t.q}”</blockquote><figcaption class="who"><span class="ini" style="--c:${['#D7192F','#1E56B0','#1F8A55','#C9960A'][i]}">${t.n[0]}</span><span><b>${t.n}</b><br><span class="small muted">${t.res}</span></span></figcaption></figure></div>`).join('')}</div>
+      <div class="row" style="margin-top:16px"><div class="dots tdots">${TESTI.map((t,i) => `<button data-act="car-go" data-i="${i}" aria-label="Opinión ${i+1}" aria-current="${i===0}"></button>`).join('')}</div><button class="round dark" data-act="car-prev" aria-label="Opinión anterior">${ic('prev')}</button><button class="round dark" data-act="car-next" aria-label="Siguiente opinión">${ic('next')}</button></div></div>
+  </section>
+
+  <section class="sec" id="s-faq" style="padding-top:0">
+    <div class="sec-head"><div><h2>Preguntas frecuentes</h2></div></div>
+    <div class="faq">${FAQ.map(([q,a],i) => `<details ${i===0?'open':''}><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
+  </section>
+
+  <div class="band" id="s-ubicacion"><section class="sec">
+    <div class="sec-head"><div><h2>Visítanos</h2></div></div>
+    <div class="loc"><div class="map">${mapArt()}</div>
+      <div class="stack" style="gap:18px"><p class="live" style="--c:${o.open?'#46B97C':'#F0485E'}"><i></i>${o.text}</p><p style="font-size:1.15rem"><b>Calle de ejemplo 123, Ciudad de México</b></p>
+        <ul class="hours">${DAYS.map((d,i) => `<li class="${i===wd(today())?'now':''}"><span>${d}</span><span class="num">${pad(HOURS[i][0])}:00 a ${HOURS[i][1]}:00</span></li>`).join('')}</ul>
+        <div class="row"><a class="btn yellow" href="https://www.google.com/maps/search/?api=1&amp;query=Fierros+Gym+CDMX" target="_blank" rel="noopener">${ic('pin')}Cómo llegar</a><a class="btn light-ghost" href="${wa('Hola, quiero información de Fierros Gym')}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a></div>
+      </div></div>
+  </section></div>
+
+  <section class="cta-final"><div class="sec"><h2>Tu primer día es gratis</h2><p>Ven, entrena y decide después. Sin cuota de inscripción ni letras chiquitas.</p><div class="row"><button class="btn ink" data-act="trial">Agendar mi día gratis</button><button class="btn light-ghost" data-act="${S.member ? 'to-app' : 'to-reg'}">${S.member ? 'Ir a mi cuenta' : 'Inscribirme ya'}</button></div></div></section>
+
+  <footer class="foot">
+    <div class="foot-grid">${logo()}<div class="social"><a class="btn sm light-ghost" href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a><a class="btn sm light-ghost" href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a><a class="btn sm light-ghost" href="${wa('Hola, quiero información de Fierros Gym')}" target="_blank" rel="noopener">WhatsApp</a></div></div>
+    <p class="small muted" style="margin-top:18px">Calle de ejemplo 123, Ciudad de México. Lunes a viernes de 5:00 a 23:00.</p>
+    <div class="bigword" aria-hidden="true">FIERROS</div>
+  </footer>
+
+  <div class="mbar"><button class="btn yellow" data-act="trial">Prueba un día gratis</button><a class="round wa" href="${wa('Hola, quiero información de Fierros Gym')}" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">${ic('wa')}</a></div>
+  <a class="wa-fab" href="${wa('Hola, quiero información de Fierros Gym')}" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">${ic('wa')}</a>
+  </div>`;
+}
+
+function siteClasses(){
+  const t = wd(today());
+  let list = CLASSES.filter(c => c.day === siteDay && (!siteCoach || c.coach === siteCoach)).sort((a,b) => a.time.localeCompare(b.time));
+  return `<div class="chips" role="group" aria-label="Día de la semana">${DAYS.map((d,i) => `<button data-act="sday" data-d="${i}" aria-pressed="${i===siteDay}">${i===t?'Hoy':d}</button>`).join('')}</div>
+  ${siteCoach ? `<p class="row" style="margin-top:14px"><span class="tag blue">Clases de ${esc(siteCoach)}</span><button class="link" data-act="scoach-clear">Ver todas las clases</button></p>` : ''}
+  <div class="cgrid">${list.length ? list.map(c => { const dt = iso(nextClassDate(c)), pct = Math.round(taken(c,dt)/c.cap*100);
+    return `<article class="ccard" style="--c:${CLS_COLOR[c.name]}"><div class="row between"><time>${c.time}</time><span class="tag ${pct>=70?'red':'green'}">${pct>=70?'Casi llena':'Hay lugares'}</span></div><div><b style="font-size:1.15rem">${c.name}</b><div class="small muted">Con ${c.coach}, 50 minutos</div></div><div class="meter" role="img" aria-label="${pct}% de lugares ocupados"><i style="width:${pct}%"></i></div><button class="btn sm ghost" data-act="sbook" data-n="${c.name}">Reservar lugar</button></article>`; }).join('')
+    : `<p class="muted">${siteCoach ? esc(siteCoach) + ' no da clases este día. Prueba otro día.' : 'No hay clases grupales este día. El área de pesas está abierta.'}</p>`}</div>`;
+}
+
+function siteApp(){
+  const feats = [['Rutina día por día','Series, repeticiones, descansos y cronómetro.'],['Menú con tus calorías','Comida mexicana en porciones hechas para ti.'],['Avisos de pago','Te avisamos antes de que venza tu mensualidad.']];
+  const ex = ['Sentadilla con barra','Peso muerto rumano','Prensa de pierna','Curl femoral'];
+  return `<div class="appsec"><div class="stack" style="gap:16px"><h2>Tu app de socio viene incluida</h2><p class="muted" style="max-width:46ch">Desde que te inscribes tienes tu panel personal. Sin descargar nada: entras desde el navegador de tu celular.</p>
+    <div class="feats">${feats.map((f,i) => `<button class="feat" data-act="phone-go" data-i="${i}" aria-current="${i===0}"><b>${f[0]}</b><span>${f[1]}</span></button>`).join('')}</div>
+    <button class="btn" data-act="${S.member ? 'to-app' : 'to-reg'}" style="justify-self:start">${S.member ? 'Abrir mi app' : 'Quiero mi app de socio'}</button></div>
+  <div class="phone" data-car="phone" aria-label="Vista previa de la app de socio"><div class="scr"><span class="notch"></span><div class="track">
+    <div class="ps"><span class="small muted">Lunes</span><h4>Pierna A</h4><div class="progressbar"><i style="width:50%"></i></div>${ex.map((e,i) => `<div class="exm"><span class="tk ${i<2?'on':''}"></span><span style="${i<2?'text-decoration:line-through;color:var(--muted)':''}"><b>${e}</b><br><span class="muted">3 series de 12–15</span></span></div>`).join('')}<div class="mini" style="background:var(--blue);color:#fff;border:0;text-align:center;font-weight:700">Descanso 0:42</div></div>
+    <div class="ps"><span class="small muted">Martes</span><h4>1,850 kcal</h4><div class="macrobar"><i style="flex:33;background:var(--blue)"></i><i style="flex:42;background:var(--yellow)"></i><i style="flex:25;background:var(--green)"></i></div>${[['Desayuno','Huevos a la mexicana',450],['Comida','Tacos de bistec con nopales',640],['Cena','Quesadillas de champiñón',470]].map(m => `<div class="mini"><span class="muted">${m[0]}</span><b>${m[1]}</b><span class="muted">${m[2]} kcal</span></div>`).join('')}</div>
+    <div class="ps"><div class="alert warn" style="margin:0;padding:10px"><p><strong>Tu mensualidad vence en 3 días.</strong>Total: $599</p></div><h4>3 días</h4><span class="muted">antes de tu próximo pago</span>${barbell(.1,'warn',false)}<div class="mini" style="background:var(--ink);color:var(--on-ink);border:0;text-align:center;font-weight:700">Pagar mensualidad</div></div>
+  </div></div></div></div>`;
+}
+
+function cfgTotal(){ const p = PLANS[cfg.plan]; return p.price + ((cfg.rutina ? SERVICES.rutina.price : 0) + (cfg.nutri ? SERVICES[cfg.nutri].price : 0))*p.months; }
+function cfgSummary(){
+  const p = PLANS[cfg.plan], t = cfgTotal();
+  return `<h3>Tu plan</h3><dl class="kv" style="grid-template-columns:1fr auto"><dt>Membresía ${p.name.toLowerCase()}</dt><dd class="num">${money(p.price)}</dd>${cfg.rutina ? `<dt>Rutina personalizada × ${p.months}</dt><dd class="num">${money(SERVICES.rutina.price*p.months)}</dd>` : ''}${cfg.nutri ? `<dt>${SERVICES[cfg.nutri].name} × ${p.months}</dt><dd class="num">${money(SERVICES[cfg.nutri].price*p.months)}</dd>` : ''}</dl>
+  <div><div class="total num">${money(t)}</div><p class="small muted">${p.months > 1 ? `Equivale a ${money(t/p.months)} al mes.` : 'Pago mensual.'} Sin cuota de inscripción.</p></div>
+  <button class="btn yellow" data-act="cfg-go">${S.member ? 'Ir a mis planes' : 'Inscribirme con este plan'}</button><button class="btn light-ghost" data-act="trial">Primero quiero probar</button>`;
+}
+function siteCfg(){
+  const addon = (type,name,val,checked,title,price,desc) => `<label class="addon"><input type="${type}" ${name ? `name="${name}"` : ''} value="${val}" data-cfg="${type==='checkbox'?'rutina':'nutri'}" ${checked?'checked':''}><span><b>${title}</b>${price ? ` <span class="muted">+${money(price)} al mes</span>` : ''}${desc ? `<br><span class="small muted">${desc}</span>` : ''}</span></label>`;
+  return `<div class="cfg"><div class="stack" style="gap:14px">
+    <div class="pcards">${Object.entries(PLANS).map(([k,p]) => `<div class="choice"><input type="radio" name="cfgplan" id="cp-${k}" value="${k}" ${cfg.plan===k?'checked':''} data-cfg="plan"><label for="cp-${k}">${k==='trimestral'?'<span class="badge">Más elegido</span>':''}<b>${p.name}</b><span class="price num">${money(p.price)}</span><span class="small muted">${p.note}</span></label></div>`).join('')}</div>
+    <h3 style="margin-top:10px">Agrega a tu plan</h3>
+    ${addon('checkbox','','1',cfg.rutina,'Rutina personalizada',SERVICES.rutina.price,'Tu entrenamiento día por día en la app.')}
+    <div class="addons">${addon('radio','cfgn','',!cfg.nutri,'Sin plan alimenticio',0,'')}${addon('radio','cfgn','nutri_basico',cfg.nutri==='nutri_basico','Plan alimenticio básico',SERVICES.nutri_basico.price,'Menú de 7 días con tus calorías.')}${addon('radio','cfgn','nutri_pro',cfg.nutri==='nutri_pro','Plan alimenticio Pro',SERVICES.nutri_pro.price,'Macros por comida y lista del súper.')}</div>
+  </div><aside class="summary" id="cfg-sum" aria-live="polite">${cfgSummary()}</aside></div>`;
+}
+
+function calcVals(){
+  const c = calc; if (!(c.weight >= 30 && c.weight <= 250 && c.height >= 120 && c.height <= 230 && c.age >= 14 && c.age <= 90)) return null;
+  const bmr = 10*c.weight + 6.25*c.height - 5*c.age + (c.sex === 'mujer' ? -161 : 5);
+  let k = bmr*({3:1.375,4:1.465,5:1.55,6:1.64}[c.days]) + GOALS[c.goal].kcal; k = Math.round(Math.min(3800, Math.max(1300, k))/10)*10;
+  const p = Math.round(c.weight*(c.goal === 'acond' ? 1.6 : 2)), f = Math.round(k*.25/9), carb = Math.max(0, Math.round((k - p*4 - f*9)/4));
+  return {k,p,f,carb};
+}
+function calcOut(){
+  const v = calcVals();
+  if (!v) return `<p class="muted">Revisa tus datos: edad entre 14 y 90 años, peso entre 30 y 250 kg y estatura entre 120 y 230 cm.</p>`;
+  const pk = v.p*4, ck = v.carb*4, fk = v.f*9;
+  return `<span class="small muted">Tu meta diaria aproximada para ${GOALS[calc.goal].name.toLowerCase()}</span><div class="kcal num">${v.k.toLocaleString('es-MX')}<small> kcal</small></div>
+  <div class="macrobar" aria-hidden="true"><i style="flex:${pk};background:var(--blue)"></i><i style="flex:${ck};background:var(--yellow)"></i><i style="flex:${fk};background:var(--green)"></i></div>
+  <div class="legend num"><span style="--c:var(--blue)">Proteína ${v.p} g</span><span style="--c:var(--yellow)">Carbohidratos ${v.carb} g</span><span style="--c:var(--green)">Grasa ${v.f} g</span></div>
+  <p class="small muted">Calculado con la fórmula Mifflin-St Jeor y tu nivel de actividad. Tu coach la ajusta en tu evaluación.</p>
+  <button class="btn" data-act="calc-go" style="justify-self:start">Quiero mi menú con estas calorías</button>`;
+}
+function siteCalc(){
+  return `<div class="calc"><form id="calc-form" class="panel" novalidate><div class="fgrid">
+    <label class="f">Sexo<select name="sex" data-calc><option value="hombre" ${calc.sex==='hombre'?'selected':''}>Hombre</option><option value="mujer" ${calc.sex==='mujer'?'selected':''}>Mujer</option></select></label>
+    <label class="f">Edad<input name="age" type="number" min="14" max="90" inputmode="numeric" value="${calc.age}" data-calc></label>
+    <label class="f">Peso (kg)<input name="weight" type="number" min="30" max="250" step="0.1" inputmode="decimal" value="${calc.weight}" data-calc></label>
+    <label class="f">Estatura (cm)<input name="height" type="number" min="120" max="230" inputmode="numeric" value="${calc.height}" data-calc></label>
+    <div class="f full"><span>Objetivo</span><div class="seg" role="group" aria-label="Objetivo">${Object.entries(GOALS).map(([k,g]) => `<button type="button" data-act="cgoal" data-k="${k}" aria-pressed="${calc.goal===k}">${g.name}</button>`).join('')}</div></div>
+    <div class="f full"><span>Días de entrenamiento por semana</span><div class="seg" role="group" aria-label="Días por semana">${[3,4,5,6].map(n => `<button type="button" data-act="cdays" data-k="${n}" aria-pressed="${calc.days===n}">${n} días</button>`).join('')}</div></div>
+  </div></form><div class="out" id="calc-out" aria-live="polite">${calcOut()}</div></div>`;
+}
+
+/* Carruseles */
+function carIndex(car){ const t = car.querySelector('.track'); return Math.max(0, Math.min(t.children.length-1, Math.round(t.scrollLeft/(t.clientWidth || 1)))); }
+function carGo(car,i){ const t = car.querySelector('.track'), n = t.children.length; i = (i + n) % n; if (t.scrollTo) t.scrollTo({left:i*t.clientWidth, behavior:reduced() ? 'auto' : 'smooth'}); else t.scrollLeft = i*t.clientWidth; carSync(car, i); }
+function carSync(car, forced){
+  const i = forced ?? carIndex(car);
+  car.querySelectorAll('.dots button').forEach((b,k) => b.setAttribute('aria-current', String(k === i)));
+  if (car.dataset.car === 'phone') document.querySelectorAll('.feat').forEach((b,k) => b.setAttribute('aria-current', String(k === i)));
+  if (car.dataset.car === 'hero') heroIdx = i;
+}
+function heroStart(){
+  clearInterval(heroTimer);
+  const car = document.querySelector('[data-car="hero"]'); if (!car) return;
+  const prog = car.querySelector('.prog'); prog.classList.remove('run'); void prog.offsetWidth;
+  if (reduced() || heroPaused) return;
+  prog.classList.add('run');
+  heroTimer = setInterval(() => { if (document.hidden || !document.contains(car)) return; carGo(car, heroIdx + 1); prog.classList.remove('run'); void prog.offsetWidth; prog.classList.add('run'); }, 7000);
+}
+function railMove(btn, dir){ const r = btn.closest('.sec').querySelector('[data-rail]'); if (r.scrollBy) r.scrollBy({left:dir*r.clientWidth*.85, behavior:reduced() ? 'auto' : 'smooth'}); }
+function initSite(){
+  document.querySelectorAll('[data-car]').forEach(car => { const t = car.querySelector('.track'); let raf = 0;
+    t.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => carSync(car)); }, {passive:true}); });
+  document.querySelectorAll('[data-rail]').forEach(r => { const bar = r.parentElement.querySelector('.railbar i');
+    const upd = () => { if (!bar) return; const w = r.scrollWidth || 1; bar.style.width = Math.min(100, r.clientWidth/w*100) + '%'; bar.style.marginLeft = (r.scrollLeft/w*100) + '%'; };
+    r.addEventListener('scroll', upd, {passive:true}); upd(); });
+  const hero = document.querySelector('[data-car="hero"]');
+  if (hero) { heroIdx = 0; const tr = hero.querySelector('.track');
+    tr.addEventListener('pointerdown', () => { clearInterval(heroTimer); hero.querySelector('.prog').classList.remove('run'); });
+    tr.addEventListener('pointerup', () => setTimeout(heroStart, 400));
+    hero.addEventListener('focusin', () => { clearInterval(heroTimer); hero.querySelector('.prog').classList.remove('run'); });
+    heroStart(); }
+  onScroll();
+}
+function onScroll(){ const m = document.querySelector('.mbar'); if (!m) return; const h = document.querySelector('.hero-car'); m.classList.toggle('show', window.scrollY > (h ? h.offsetHeight*.6 : 300)); }
+window.addEventListener('scroll', onScroll, {passive:true});
+
+function openLb(i){
+  lbI = (i + ZONES.length) % ZONES.length; const z = ZONES[lbI];
+  dlg(`<div class="lbwrap"><div class="lbpic">${ART[z.a]()}</div><div class="lbcap"><div><b>${z.t}</b><p>${z.d}</p><span class="small" style="opacity:.7">${lbI+1} de ${ZONES.length}</span></div><div class="row"><button class="round" data-act="lb-prev" aria-label="Zona anterior">${ic('prev')}</button><button class="round" data-act="lb-next" aria-label="Siguiente zona">${ic('next')}</button><button class="round" data-act="close" aria-label="Cerrar">${ic('x')}</button></div></div></div>`, 'lb');
+}
+function openTrial(interest){
+  const opts = Array.from({length:7},(_,i) => addDays(today(), i+1)).map(d => `<option value="${iso(d)}">${DAYS[wd(d)]} ${fmtShort(d)}</option>`).join('');
+  const ints = ['Pesas y máquinas','Spinning','Box','Funcional','HIIT','Yoga y movilidad'];
+  dlg(`<form class="dlg" id="trial-form" novalidate><div class="row between"><h3>Tu día de prueba gratis</h3><button type="button" class="round dark" data-act="close" aria-label="Cerrar">${ic('x')}</button></div><p class="muted">Déjanos tus datos y te confirmamos por WhatsApp. Incluye una evaluación con coach.</p>
+    <label class="f">Nombre<input name="n" autocomplete="name" required></label>
+    <label class="f">WhatsApp<input name="t" type="tel" inputmode="tel" autocomplete="tel" required></label>
+    <div class="fgrid"><label class="f">¿Qué día vienes?<select name="d">${opts}</select></label><label class="f">¿Qué te interesa?<select name="i">${ints.map(x => `<option ${x===interest?'selected':''}>${x}</option>`).join('')}</select></label></div>
+    <p class="err" id="trial-err" hidden></p>
+    <button class="btn" type="submit">Agendar mi día gratis</button></form>`);
+}
+function openMenu(){
+  dlg(`<div class="dlg"><div class="row between">${logo()}<button class="round dark" data-act="close" aria-label="Cerrar menú">${ic('x')}</button></div><div class="moresheet">${SITE_LINKS.map(([id,l]) => `<button data-scroll="${id}">${l}</button>`).join('')}</div><button class="btn yellow" data-act="trial">Prueba un día gratis</button><button class="btn ghost" data-act="${S.member ? 'to-app' : 'to-reg'}">${S.member ? 'Ir a mi cuenta' : 'Inscribirme'}</button>${adminOk ? `<button class="btn ghost" data-go="admin">Administración</button>` : ''}</div>`);
+}
+
+/* ---------- Administración ---------- */
+let adminOk = false, dbCap = null, userCap = null, downloadsCap = null, myId = null, memRef = null;
+let standalone = false, adminUnlocked = false;
+const ADMIN_HASH = '33a246b73e15c801d3850230df180d7e9b222be95cbf0e877c8bb798aa4a93a9';
+async function sha256(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join(''); }
+function vAdminLogin(){
+  return `<div class="pagehead"><h2>Administración</h2><p class="muted">Esta sección es solo para el dueño y el personal del gimnasio.</p></div>
+  <section class="panel" style="max-width:420px"><form id="adm-login-form"><label class="f">Contraseña<input name="p" type="password" autocomplete="current-password" required autofocus></label><p class="err" id="adm-login-err" hidden></p><button class="btn" type="submit">Entrar al panel</button></form></section>`;
+}
+let realMembers = [], realLeads = [], adminTab = 'resumen', adminDemo = null, adminLoading = false, adminLoaded = false, demoCache = null, admFilter = 'todos', admSearch = '';
+const DEMO_NAMES = ['Ana Torres','Luis Hernández','Valeria Cruz','Jorge Ramírez','Daniela Flores','Miguel Ángel Soto','Paola Jiménez','Andrés Castillo','Regina Morales','Carlos Mendoza','Fernanda Ruiz','Emilio Vargas','Sofía Navarro','Rodrigo Ortega','Camila Reyes','Pablo Domínguez','Mariana Aguilar','Diego Salazar','Ximena Rojas','Alejandro Peña','Lucía Herrera','Santiago Guzmán','Renata Campos','Gabriel Ríos','Natalia Delgado','Iker Romero','Isabela Cortés','Mateo Fuentes','Julieta Ponce','Sebastián Luna','Abril Medina','Leonardo Ibarra','Montserrat Lara','Bruno Escobar','Elena Padilla','Tomás Carrillo','Victoria Bravo','Nicolás Serrano','Romina Acosta','Dante Villanueva'];
+const INTERESTS = ['Pesas y máquinas','Spinning','Box','Funcional','HIIT','Yoga y movilidad'];
+function monthlyOf(m){ const p = PLANS[m.plan]; return p.price/p.months + (m.services.rutina ? SERVICES.rutina.price : 0) + (m.services.nutri ? SERVICES[m.services.nutri].price : 0); }
+function dueOf(m){ const p = PLANS[m.plan]; return p.price + ((m.services.rutina ? SERVICES.rutina.price : 0) + (m.services.nutri ? SERVICES[m.services.nutri].price : 0))*p.months; }
+function dLeft(m){ return Math.round((parseISO(m.nextDue) - today())/86400000); }
+function demoData(){
+  if (demoCache) return demoCache;
+  const t = today(), members = [];
+  DEMO_NAMES.forEach((name,i) => {
+    const h = hash('m' + i), plan = h%10 < 5 ? 'mensual' : h%10 < 8 ? 'trimestral' : 'anual', p = PLANS[plan];
+    const services = {}; if (h%3 !== 0) services.rutina = true; if (h%4 === 0) services.nutri = 'nutri_pro'; else if (h%4 === 1) services.nutri = 'nutri_basico';
+    const m = {uid:'demo'+i, memberId:'FG-' + String(100200 + i*37), name, phone:'55' + String(10000000 + h%89999999), email:name.toLowerCase().replace(/[^a-z]+/g,'.') + '@correo.com', plan, services, since:iso(addDays(t, -(i%8 === 0 ? 2 + h%20 : 25 + h%400))), goal:['grasa','musculo','acond'][h%3], lastWeight:55 + h%40, payments:[], checkins:[], bookings:[], demo:true};
+    let d = parseISO(m.since); const amt = dueOf(m);
+    while (d <= t) { m.payments.push({date:iso(d), amount:amt, method:['Tarjeta','Transferencia SPEI','Efectivo en recepción'][(h + m.payments.length)%3], concept:'Membresía ' + p.name.toLowerCase()}); d = addDays(d, p.days); }
+    m.nextDue = iso(d);
+    if (i%6 === 0) { m.nextDue = iso(addDays(t, -(1 + h%12))); m.payments.pop(); } else if (i%5 === 0) m.nextDue = iso(addDays(t, h%6));
+    const freq = 2 + h%5, lapsed = i%6 === 0 || i%11 === 0;
+    for (let k = 0; k < 60; k++) { if (lapsed && k < 16) continue; if (addDays(t,-k) < parseISO(m.since)) break; if (hash(i + 'c' + k)%10 < freq) m.checkins.push(iso(addDays(t,-k))); }
+    CLASSES.forEach(c => { if (hash(i + c.id)%(3 + c.day%4) === 0) m.bookings.push(c.id + '|' + iso(nextClassDate(c))); });
+    members.push(m);
+  });
+  const leads = ['Karen Solís','Óscar Treviño','Miriam Cano','Héctor Palacios','Lorena Ávila','Fabián Quiroz'].map((n,i) => ({id:'demo-l' + i, name:n, phone:'55' + String(20000000 + hash(n)%79999999), date:iso(addDays(t, 1 + i)), interest:INTERESTS[i%6], createdAt:Date.now() - i*36e5*7, status:i < 3 ? 'pendiente' : i < 5 ? 'contactado' : 'inscrito', demo:true}));
+  return demoCache = {members, leads};
+}
+function useDemo(){ return adminDemo === null ? realMembers.length < 3 : adminDemo; }
+function admMembers(){ return useDemo() ? demoData().members : realMembers; }
+function admLeads(){ return useDemo() ? demoData().leads : realLeads; }
+function memberSummary(){
+  const m = S.member; if (!m) return null;
+  return {uid:myId, memberId:m.id, name:m.name, phone:m.phone, email:m.email, plan:S.membership.plan, nextDue:S.membership.nextDue, since:m.since, services:S.services, goal:m.goal, lastWeight:lastWeight(), payments:S.membership.payments, checkins:S.checkins.slice(-120), bookings:S.bookings, adminVersion:S.adminVersion || 0, updatedAt:Date.now()};
+}
+async function loadAdmin(){
+  if (!dbCap || !adminOk || adminLoading) return;
+  adminLoading = true; if (view === 'admin') render();
+  try {
+    const ms = await dbCap.collection('members').get();
+    realMembers = ms.docs.map(d => d.data()).filter(x => x && x.name && !x.deleted).map(x => Object.assign({services:{}, payments:[], checkins:[], bookings:[]}, x));
+    const ls = await dbCap.collection('leads').get();
+    realLeads = []; ls.docs.forEach(d => { const x = d.data(); (x && x.items || []).forEach(it => realLeads.push(Object.assign({}, it, {doc:d.id}))); });
+    realLeads.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+    adminLoaded = true;
+  } catch(e) {}
+  adminLoading = false; if (view === 'admin') render();
+}
+function barChart(vals, labels, color, fmt, highlight){
+  const W = 600, H = 200, P = 30, n = vals.length, mx = Math.max(1, ...vals), bw = (W - 2*P)/n;
+  return `<div class="chartwrap"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.max(320, n*34)}px" role="img" aria-label="Gráfica de barras">
+    <line x1="${P}" x2="${W-P}" y1="${H-P}" y2="${H-P}" stroke="var(--line)"/>
+    ${vals.map((v,i) => { const h = v/mx*(H-2*P-18), x = P + i*bw + bw*.15; return `<rect x="${x}" y="${H-P-h}" width="${bw*.7}" height="${h}" rx="4" fill="${highlight === i ? 'var(--ink)' : color}"/><text x="${x + bw*.35}" y="${H-P-h-5}" font-size="13" text-anchor="middle" fill="var(--ink)" font-weight="700">${v ? fmt(v) : ''}</text><text x="${x + bw*.35}" y="${H-10}" font-size="12" text-anchor="middle" fill="var(--muted)">${labels[i]}</text>`; }).join('')}</svg></div>`;
+}
+function monthLabel(key){ const [y,m] = key.split('-').map(Number); return new Date(y, m-1, 1).toLocaleDateString('es-MX',{month:'short'}).replace('.',''); }
+function admStats(){
+  const ms = admMembers(), t = today(), mk = iso(t).slice(0,7), prevD = new Date(t.getFullYear(), t.getMonth()-1, 1), pk = iso(prevD).slice(0,7);
+  const active = ms.filter(m => dLeft(m) > 0), soon = ms.filter(m => { const d = dLeft(m); return d > 0 && d <= 5; }), over = ms.filter(m => dLeft(m) <= 0);
+  const sum = (arr, k) => arr.reduce((a,m) => a + m.payments.filter(p => p.date.slice(0,7) === k).reduce((x,p) => x + p.amount, 0), 0);
+  const inc = sum(ms, mk), incPrev = sum(ms, pk);
+  const mrr = active.reduce((a,m) => a + monthlyOf(m), 0);
+  const nuevos = ms.filter(m => m.since.slice(0,7) === mk).length;
+  const hoy = ms.filter(m => m.checkins.includes(iso(t))).length;
+  const lim = iso(addDays(t,-14)), risk = active.filter(m => m.since < lim && !m.checkins.some(c => c >= lim));
+  const months = []; for (let k = 5; k >= 0; k--) { const d = new Date(t.getFullYear(), t.getMonth()-k, 1); months.push(iso(d).slice(0,7)); }
+  const byMonth = months.map(k => sum(ms, k));
+  const svc = {rutina:ms.filter(m => m.services.rutina).length, basico:ms.filter(m => m.services.nutri === 'nutri_basico').length, pro:ms.filter(m => m.services.nutri === 'nutri_pro').length};
+  const svcInc = active.reduce((a,m) => a + (m.services.rutina ? SERVICES.rutina.price : 0) + (m.services.nutri ? SERVICES[m.services.nutri].price : 0), 0);
+  const byPlan = Object.keys(PLANS).map(k => [k, active.filter(m => m.plan === k).length]);
+  return {ms, active, soon, over, inc, incPrev, mrr, nuevos, hoy, risk, months, byMonth, svc, svcInc, byPlan, pendingDue:[...soon, ...over].reduce((a,m) => a + dueOf(m), 0)};
+}
+function waPhone(p){ const d = String(p || '').replace(/\D/g,''); return d.length === 10 ? '52' + d : d; }
+function waLink(m, msg){ return 'https://wa.me/' + waPhone(m.phone) + '?text=' + encodeURIComponent(msg); }
+function remindMsg(m){ const d = dLeft(m), f = m.name.split(' ')[0]; return d > 0 ? `Hola ${f}, te saludamos de Fierros Gym. Tu membresía vence el ${fmtDate(parseISO(m.nextDue))} (${money(dueOf(m))}). Puedes pagar en recepción, por transferencia o desde tu app. ¡Nos vemos!` : `Hola ${f}, te saludamos de Fierros Gym. Tu membresía venció el ${fmtDate(parseISO(m.nextDue))}. Renueva por ${money(dueOf(m))} y sigue entrenando con nosotros. ¿Te ayudamos con algo?`; }
+function stTag(m){ const d = dLeft(m); return d <= 0 ? `<span class="tag red">Vencida ${d === 0 ? 'hoy' : 'hace ' + (-d) + ' d'}</span>` : d <= 5 ? `<span class="tag yellow">Vence en ${d} d</span>` : `<span class="tag green">Al día</span>`; }
+function lastVisit(m){ if (!m.checkins.length) return 'Sin visitas'; const d = Math.round((today() - parseISO(m.checkins[m.checkins.length-1]))/86400000); return d === 0 ? 'Hoy' : d === 1 ? 'Ayer' : `Hace ${d} días`; }
+
+const ADM = {
+  resumen(){
+    const s = admStats(), mk = iso(today()).slice(0,7);
+    const delta = s.incPrev ? Math.round((s.inc - s.incPrev)/s.incPrev*100) : null;
+    const todo = [];
+    const dueToday = s.ms.filter(m => dLeft(m) === 0);
+    if (dueToday.length) todo.push(['yellow', `${dueToday.length} ${dueToday.length === 1 ? 'membresía vence' : 'membresías vencen'} hoy`, 'cobranza']);
+    const over7 = s.over.filter(m => dLeft(m) <= -7); if (over7.length) todo.push(['red', `${over7.length} ${over7.length === 1 ? 'socio lleva' : 'socios llevan'} más de una semana sin renovar`, 'cobranza']);
+    if (s.risk.length) todo.push(['blue', `${s.risk.length} ${s.risk.length === 1 ? 'socio activo no ha venido' : 'socios activos no han venido'} en 14 días`, 'socios']);
+    const pend = admLeads().filter(l => l.status === 'pendiente'); if (pend.length) todo.push(['green', `${pend.length} ${pend.length === 1 ? 'prospecto espera' : 'prospectos esperan'} confirmación de su día gratis`, 'prospectos']);
+    const full = CLASSES.map(c => { const dt = iso(nextClassDate(c)); return {c, n:s.ms.filter(m => m.bookings.includes(c.id + '|' + dt)).length}; }).filter(x => x.n/x.c.cap >= .85); if (full.length) todo.push(['blue', `${full.length} ${full.length === 1 ? 'clase está casi llena' : 'clases están casi llenas'} esta semana`, 'clases']);
+    return `<div class="kpis">
+      <div class="kpi"><span class="muted small">Ingresos de ${monthLabel(mk)}</span><b class="num">${money(s.inc)}</b>${delta !== null ? `<span class="small ${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '+' : ''}${delta}% vs. mes anterior</span>` : '<span class="small muted">Sin mes anterior</span>'}</div>
+      <div class="kpi"><span class="muted small">Ingreso mensual recurrente</span><b class="num">${money(s.mrr)}</b><span class="small muted">${s.active.length} socios activos</span></div>
+      <div class="kpi"><span class="muted small">Por cobrar</span><b class="num">${money(s.pendingDue)}</b><span class="small muted">${s.soon.length} por vencer, ${s.over.length} vencidos</span></div>
+      <div class="kpi"><span class="muted small">Nuevos este mes</span><b class="num">${s.nuevos}</b><span class="small muted">${s.ms.length} socios en total</span></div>
+      <div class="kpi"><span class="muted small">Visitas hoy</span><b class="num">${s.hoy}</b><span class="small muted">${Math.round(s.hoy/Math.max(1,s.active.length)*100)}% de los activos</span></div>
+      <div class="kpi"><span class="muted small">En riesgo de baja</span><b class="num">${s.risk.length}</b><span class="small muted">Activos sin visita en 14 días</span></div>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <section class="panel stack" style="gap:12px"><h3>Ingresos, últimos 6 meses</h3>${barChart(s.byMonth, s.months.map(monthLabel), 'var(--green)', v => '$' + Math.round(v/1000) + 'k', 5)}</section>
+      <section class="panel stack" style="gap:10px"><h3>Pendientes de hoy</h3>${todo.length ? `<ul class="list">${todo.map(t => `<li><span style="display:flex;gap:10px;align-items:flex-start;flex:1"><i class="dot ${t[0]}" style="margin-top:7px"></i><span>${t[1]}</span></span><button class="btn sm ghost" data-act="adm-tab" data-t="${t[2]}">Ver</button></li>`).join('')}</ul>` : '<p class="muted">Todo en orden por hoy.</p>'}</section>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <section class="panel stack" style="gap:12px"><h3>Socios activos por plan</h3><ul class="list">${s.byPlan.map(([k,n]) => `<li><span>${PLANS[k].name}</span><span class="row" style="gap:10px"><span class="meter" style="--c:var(--blue);width:120px"><i style="width:${Math.round(n/Math.max(1,s.active.length)*100)}%"></i></span><b class="num">${n}</b></span></li>`).join('')}</ul></section>
+      <section class="panel stack" style="gap:12px"><h3>Servicios contratados</h3><ul class="list"><li><span>Rutina personalizada</span><b class="num">${s.svc.rutina}</b></li><li><span>Plan alimenticio básico</span><b class="num">${s.svc.basico}</b></li><li><span>Plan alimenticio Pro</span><b class="num">${s.svc.pro}</b></li></ul><p class="small muted">Los servicios suman <b class="num">${money(s.svcInc)}</b> al mes sobre las membresías.</p></section>
+    </div>`;
+  },
+  cobranza(){
+    const s = admStats();
+    let rows = s.ms.filter(m => admFilter === 'todos' ? true : admFilter === 'vencer' ? (dLeft(m) > 0 && dLeft(m) <= 5) : admFilter === 'vencidos' ? dLeft(m) <= 0 : dLeft(m) > 5).sort((a,b) => a.nextDue.localeCompare(b.nextDue));
+    const chips = [['todos','Todos'],['vencer','Por vencer'],['vencidos','Vencidos'],['aldia','Al día']];
+    return `<div class="chips">${chips.map(c => `<button data-act="adm-filter" data-f="${c[0]}" aria-pressed="${admFilter===c[0]}">${c[1]}</button>`).join('')}</div>
+    <section class="panel" style="margin-top:14px"><div class="row between" style="margin-bottom:6px"><h3>${rows.length} ${rows.length === 1 ? 'socio' : 'socios'}</h3><span class="small muted num">Por cobrar: ${money(rows.filter(m => dLeft(m) <= 5).reduce((a,m) => a + dueOf(m), 0))}</span></div>
+    ${rows.length ? `<ul class="list cob">${rows.map(m => `<li><div><b>${esc(m.name)}</b><div class="small muted">${PLANS[m.plan].name}, vence ${fmtShort(parseISO(m.nextDue))}. ${money(dueOf(m))}</div><div style="margin-top:6px">${stTag(m)}</div></div><div class="row" style="gap:6px;justify-content:flex-end">${dLeft(m) <= 5 ? `<a class="btn sm ghost" href="${waLink(m, remindMsg(m))}" target="_blank" rel="noopener" aria-label="Recordar por WhatsApp a ${esc(m.name)}">${ic('wa')}</a>` : ''}<button class="btn sm" data-act="adm-pay" data-uid="${m.uid}">Registrar pago</button></div></li>`).join('')}</ul>` : '<p class="muted">No hay socios en este filtro.</p>'}</section>`;
+  },
+  socios(){
+    const s = admStats(), q = admSearch.trim().toLowerCase();
+    const rows = s.ms.filter(m => !q || m.name.toLowerCase().includes(q) || (m.memberId || '').toLowerCase().includes(q) || (m.phone || '').includes(q)).sort((a,b) => a.name.localeCompare(b.name,'es'));
+    return `<div class="row between" style="margin-bottom:14px"><label class="sr" for="adm-q">Buscar socio</label><input class="in" id="adm-q" data-act="adm-search" placeholder="Buscar por nombre, número de socio o teléfono" value="${esc(admSearch)}" style="flex:1;min-width:220px">${downloadsCap ? `<button class="btn sm ghost" data-act="adm-csv">Exportar CSV</button>` : ''}</div>
+    <section class="panel"><ul class="list soc">${rows.map(m => `<li><div><b>${esc(m.name)}</b> <span class="small muted num">${esc(m.memberId || '')}</span><div class="small muted">${PLANS[m.plan].name} desde ${fmtShort(parseISO(m.since))}. Última visita: ${lastVisit(m)}. Objetivo: ${GOALS[m.goal] ? GOALS[m.goal].name.toLowerCase() : 'sin definir'}</div><div class="row" style="gap:6px;margin-top:6px">${stTag(m)}${m.services.rutina ? '<span class="tag">Rutina</span>' : ''}${m.services.nutri ? `<span class="tag">${m.services.nutri === 'nutri_pro' ? 'Nutrición Pro' : 'Nutrición'}</span>` : ''}${s.risk.includes(m) ? '<span class="tag blue">En riesgo</span>' : ''}</div></div><a class="btn sm ghost" href="${waLink(m, `Hola ${esc(m.name.split(' ')[0])}, te saludamos de Fierros Gym. `)}" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp a ${esc(m.name)}">${ic('wa')}</a></li>`).join('') || '<li><span class="muted">Sin resultados.</span></li>'}</ul></section>`;
+  },
+  clases(){
+    const ms = admMembers();
+    const items = CLASSES.map(c => { const dt = nextClassDate(c); const n = ms.filter(m => m.bookings.includes(c.id + '|' + iso(dt))).length; return {c, dt, n}; }).sort((a,b) => a.dt - b.dt || a.c.time.localeCompare(b.c.time));
+    const byName = {}; items.forEach(x => { byName[x.c.name] = (byName[x.c.name] || 0) + x.n; });
+    const top = Object.entries(byName).sort((a,b) => b[1] - a[1]);
+    const groups = {}; items.forEach(x => { (groups[iso(x.dt)] = groups[iso(x.dt)] || []).push(x); });
+    return `<div class="grid2"><section class="panel stack" style="gap:12px"><h3>Reservas por clase esta semana</h3><ul class="list">${top.map(([n,v]) => `<li><span>${n}</span><span class="row" style="gap:10px"><span class="meter" style="--c:${CLS_COLOR[n]};width:120px"><i style="width:${Math.round(v/Math.max(1,top[0][1])*100)}%"></i></span><b class="num">${v}</b></span></li>`).join('')}</ul></section>
+    <section class="panel stack" style="gap:12px"><h3>Ocupación promedio</h3>${(() => { const tot = items.reduce((a,x) => a + x.c.cap, 0), res = items.reduce((a,x) => a + x.n, 0); return `<div class="stat"><b class="num">${Math.round(res/tot*100)}%</b><span class="small muted">${res} reservas de ${tot} lugares en ${items.length} clases</span></div>`; })()}<p class="small muted">Las clases con menos del 40% de ocupación son candidatas a cambiar de horario.</p></section></div>
+    ${Object.entries(groups).map(([k,arr]) => `<section class="panel" style="margin-top:18px"><h3 style="margin-bottom:6px">${k === iso(today()) ? 'Hoy' : DAYS[wd(parseISO(k))]} ${fmtShort(parseISO(k))}</h3>${arr.map(x => { const pct = Math.round(x.n/x.c.cap*100); return `<div class="cls"><time>${x.c.time}</time><div><b>${x.c.name}</b><div class="spots">Con ${x.c.coach}</div><div class="meter" style="--c:${CLS_COLOR[x.c.name]};margin-top:6px"><i style="width:${pct}%"></i></div></div><span class="num ${pct >= 85 ? 'tag red' : pct < 40 ? 'tag yellow' : 'tag green'}">${x.n} de ${x.c.cap}</span></div>`; }).join('')}</section>`).join('')}`;
+  },
+  asistencia(){
+    const ms = admMembers(), t = today();
+    const days = Array.from({length:14},(_,i) => addDays(t, i-13));
+    const vals = days.map(d => ms.filter(m => m.checkins.includes(iso(d))).length);
+    const byWd = [0,0,0,0,0,0,0], weeks = 8;
+    ms.forEach(m => m.checkins.forEach(c => { if (c >= iso(addDays(t,-weeks*7))) byWd[wd(parseISO(c))]++; }));
+    const avg = Math.round(vals.reduce((a,b) => a+b,0)/14);
+    const freq = ms.filter(m => dLeft(m) > 0).map(m => m.checkins.filter(c => c >= iso(addDays(t,-28))).length);
+    const buckets = [['0 visitas',freq.filter(f => f === 0).length],['1 a 4',freq.filter(f => f >= 1 && f <= 4).length],['5 a 8',freq.filter(f => f >= 5 && f <= 8).length],['9 o más',freq.filter(f => f >= 9).length]];
+    return `<div class="grid2"><section class="panel stack" style="gap:12px"><h3>Visitas por día, últimas dos semanas</h3>${barChart(vals, days.map(d => DS[wd(d)] + d.getDate()), 'var(--blue)', v => v, 13)}<p class="small muted">Promedio: ${avg} visitas al día.</p></section>
+    <section class="panel stack" style="gap:12px"><h3>Día de la semana más concurrido</h3>${barChart(byWd, DAYS.map(d => d.slice(0,3)), 'var(--yellow)', v => v, byWd.indexOf(Math.max(...byWd)))}<p class="small muted">Suma de las últimas ${weeks} semanas.</p></section></div>
+    <section class="panel stack" style="gap:12px;margin-top:18px"><h3>Constancia de los socios activos, últimos 28 días</h3><ul class="list">${buckets.map(b => `<li><span>${b[0]}</span><span class="row" style="gap:10px"><span class="meter" style="--c:var(--green);width:120px"><i style="width:${Math.round(b[1]/Math.max(1,freq.length)*100)}%"></i></span><b class="num">${b[1]}</b></span></li>`).join('')}</ul><p class="small muted">Quien viene menos de 5 veces al mes tiene más probabilidad de darse de baja. Vale la pena escribirles.</p></section>`;
+  },
+  prospectos(){
+    const ls = admLeads(), st = {pendiente:['yellow','Pendiente'],contactado:['blue','Contactado'],inscrito:['green','Inscrito']};
+    const conv = ls.length ? Math.round(ls.filter(l => l.status === 'inscrito').length/ls.length*100) : 0;
+    return `<div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"><div class="kpi"><span class="muted small">Solicitudes de día gratis</span><b class="num">${ls.length}</b></div><div class="kpi"><span class="muted small">Sin contactar</span><b class="num">${ls.filter(l => l.status === 'pendiente').length}</b></div><div class="kpi"><span class="muted small">Se inscribieron</span><b class="num">${conv}%</b></div></div>
+    <section class="panel" style="margin-top:18px">${ls.length ? `<ul class="list cob">${ls.map((l,i) => `<li><div><b>${esc(l.name)}</b><div class="small muted">Quiere venir el ${DAYS[wd(parseISO(l.date))].toLowerCase()} ${fmtShort(parseISO(l.date))}. Le interesa: ${esc(l.interest)}.</div><div class="row" style="gap:6px;margin-top:6px"><span class="tag ${st[l.status][0]}">${st[l.status][1]}</span></div></div><div class="row" style="gap:6px;justify-content:flex-end"><a class="btn sm ghost" href="${waLink(l, `Hola ${esc(l.name.split(' ')[0])}, te escribimos de Fierros Gym para confirmar tu día de prueba gratis el ${DAYS[wd(parseISO(l.date))].toLowerCase()} ${fmtShort(parseISO(l.date))}. ¿A qué hora te acomoda?`)}" target="_blank" rel="noopener" aria-label="WhatsApp a ${esc(l.name)}">${ic('wa')}</a>${l.status === 'pendiente' ? `<button class="btn sm" data-act="adm-lead" data-i="${i}" data-s="contactado">Contactado</button>` : l.status === 'contactado' ? `<button class="btn sm" data-act="adm-lead" data-i="${i}" data-s="inscrito">Se inscribió</button>` : ''}</div></li>`).join('')}</ul>` : '<p class="muted">Aún no hay solicitudes. Llegan aquí cuando alguien pide su día gratis desde el sitio.</p>'}</section>`;
+  }
+};
+function vAdmin(){
+  if (standalone && !adminUnlocked) return vAdminLogin();
+  const tabs = [['resumen','Resumen'],['cobranza','Cobranza'],['socios','Socios'],['clases','Clases'],['asistencia','Asistencia'],['prospectos','Prospectos']];
+  const demo = useDemo();
+  return `<div class="pagehead"><div class="row between"><h2>Administración</h2><span class="row" style="gap:8px">${adminLoading ? '<span class="tag">Cargando datos…</span>' : ''}${standalone ? '<button class="btn sm ghost" data-act="adm-logout">Cerrar sesión</button>' : ''}</span></div>
+    <p class="muted">${demo ? 'Datos de ejemplo para mostrar cómo se verá el panel con socios reales.' : `${realMembers.length} ${realMembers.length === 1 ? 'socio registrado' : 'socios registrados'} en la app.`} ${dbCap && adminOk ? `<button class="link" data-act="adm-toggle">${demo ? `Ver datos reales (${realMembers.length})` : 'Ver datos de ejemplo'}</button>` : ''}</p></div>
+  <div class="chips" style="margin-bottom:18px">${tabs.map(t => `<button data-act="adm-tab" data-t="${t[0]}" aria-pressed="${adminTab===t[0]}">${t[1]}</button>`).join('')}</div>
+  <div id="adm-body">${ADM[adminTab]()}</div>`;
+}
+function admFind(uid){ return admMembers().find(m => m.uid === uid); }
+function openAdmPay(uid){
+  const m = admFind(uid); if (!m) return;
+  dlg(`<form class="dlg" id="adm-pay-form" data-uid="${esc(uid)}"><h3>Registrar pago de ${esc(m.name)}</h3><dl class="kv" style="grid-template-columns:1fr auto"><dt>Membresía ${PLANS[m.plan].name.toLowerCase()}</dt><dd class="num">${money(PLANS[m.plan].price)}</dd>${m.services.rutina ? `<dt>Rutina × ${PLANS[m.plan].months}</dt><dd class="num">${money(SERVICES.rutina.price*PLANS[m.plan].months)}</dd>` : ''}${m.services.nutri ? `<dt>${SERVICES[m.services.nutri].name} × ${PLANS[m.plan].months}</dt><dd class="num">${money(SERVICES[m.services.nutri].price*PLANS[m.plan].months)}</dd>` : ''}<dt><b>Total</b></dt><dd class="num"><b>${money(dueOf(m))}</b></dd></dl>
+  <label class="f">Método<select name="method"><option>Efectivo en recepción</option><option>Tarjeta</option><option>Transferencia SPEI</option></select></label>
+  <p class="small muted">La nueva fecha de vencimiento será el ${fmtDate(addDays(parseISO(m.nextDue) > today() ? parseISO(m.nextDue) : today(), PLANS[m.plan].days))}.</p>
+  <div class="row end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn" type="submit">Confirmar pago</button></div></form>`);
+}
+async function admPay(uid, method){
+  const m = admFind(uid); if (!m) return;
+  const base = parseISO(m.nextDue) > today() ? parseISO(m.nextDue) : today();
+  m.nextDue = iso(addDays(base, PLANS[m.plan].days));
+  m.payments.push({date:iso(today()), amount:dueOf(m), method, concept:'Membresía ' + PLANS[m.plan].name.toLowerCase()});
+  m.adminVersion = Date.now();
+  if (!m.demo && dbCap) { try { await dbCap.doc('members/' + m.uid).update({nextDue:m.nextDue, payments:m.payments, adminVersion:m.adminVersion}); } catch(e) { toast('No se pudo guardar el pago. Inténtalo de nuevo.'); } }
+  if (m.uid === myId && S.membership) { S.membership.nextDue = m.nextDue; S.membership.payments = m.payments; S.adminVersion = m.adminVersion; save(); }
+  closeDlg(); render(); toast('Pago registrado. Vence el ' + fmtDate(parseISO(m.nextDue)) + '.');
+}
+async function admLead(i, status){
+  const l = admLeads()[i]; if (!l) return; l.status = status;
+  if (!l.demo && dbCap && l.doc) { try { const ref = dbCap.doc('leads/' + l.doc); const snap = await ref.get(); const items = (snap.data() || {}).items || []; const it = items.find(x => x.createdAt === l.createdAt); if (it) { it.status = status; await ref.update({items}); } } catch(e) {} }
+  $('#adm-body').innerHTML = ADM.prospectos();
+}
+async function admCsv(){
+  const rows = [['Socio','Nombre','Teléfono','Correo','Plan','Vence','Estado','Desde','Rutina','Nutrición','Última visita','Visitas 28 días']];
+  admMembers().forEach(m => rows.push([m.memberId, m.name, m.phone, m.email, PLANS[m.plan].name, m.nextDue, dLeft(m) <= 0 ? 'Vencida' : dLeft(m) <= 5 ? 'Por vencer' : 'Al día', m.since, m.services.rutina ? 'Sí' : 'No', m.services.nutri ? SERVICES[m.services.nutri].name : 'No', m.checkins[m.checkins.length-1] || '', m.checkins.filter(c => c >= iso(addDays(today(),-28))).length]));
+  const csv = '\uFEFF' + rows.map(r => r.map(v => '"' + String(v ?? '').replace(/"/g,'""') + '"').join(',')).join('\r\n');
+  try { await downloadsCap.save({filename:'socios-fierros-' + iso(today()) + '.csv', data:csv}); } catch(e) { if (!e || e.code !== 'cancelled') toast('No se pudo exportar el archivo.'); }
+}
+async function saveLead(lead){
+  if (!dbCap || !myId) return;
+  try { const ref = dbCap.doc('leads/' + myId); const snap = await ref.get(); const items = snap.exists ? ((snap.data() || {}).items || []) : []; items.push(lead); await ref.set({items, updatedAt:Date.now()}); } catch(e) {}
+}
+
+/* ---------- Estado ---------- */
+const KEY = 'fierro-gym-v1';
+const blank = () => ({member:null,membership:null,services:{},done:{},weights:[],checkins:[],water:{},bookings:[]});
+let S = blank();
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(blank(), JSON.parse(raw)); } catch(e) {}
+let dbRef = null, saveTimer = null, saving = false, pending = false;
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700);
+}
+async function flush(){
+  if (!dbRef) return;
+  if (saving) { pending = true; return; }
+  saving = true;
+  try { await dbRef.set({json: JSON.stringify(S), updatedAt: Date.now()}); if (memRef && S.member) await memRef.set(memberSummary()); }
+  catch(e) { if (e && (e.code === 'invalid_argument' || e.code === 'revoked' || e.code === 'not_granted')) dbRef = null; }
+  saving = false;
+  if (pending) { pending = false; flush(); }
+}
+
+let view = 'inicio';
+let selDay = wd(today());
+let chat = [], coachBusy = false, coachErr = '', sampleFn = null;
+
+/* ---------- Cálculos ---------- */
+function daysLeft(){ if (!S.membership) return 0; return Math.round((parseISO(S.membership.nextDue) - today())/86400000); }
+function status(){ const d = daysLeft(); if (d <= 0) return 'bad'; if (d <= 5) return 'warn'; return 'ok'; }
+function monthlyServices(){ let t = 0; if (S.services.rutina) t += SERVICES.rutina.price; if (S.services.nutri) t += SERVICES[S.services.nutri].price; return t; }
+function dueAmount(planKey){ const p = PLANS[planKey || S.membership.nextPlan || S.membership.plan]; return p.price + monthlyServices()*p.months; }
+function age(){ const b = parseISO(S.member.birth), t = today(); let a = t.getFullYear()-b.getFullYear(); if (t < new Date(t.getFullYear(), b.getMonth(), b.getDate())) a--; return a; }
+function lastWeight(){ return S.weights.length ? S.weights[S.weights.length-1].kg : S.member.weight; }
+function kcalTarget(){
+  const m = S.member, w = lastWeight(), h = Number(m.height), a = age();
+  const bmr = 10*w + 6.25*h - 5*a + (m.sex === 'mujer' ? -161 : 5);
+  const af = {3:1.375,4:1.465,5:1.55,6:1.64}[m.days] || 1.4;
+  const t = bmr*af + GOALS[m.goal].kcal;
+  return Math.round(Math.min(3800, Math.max(1300, t))/10)*10;
+}
+function bmi(){ const h = S.member.height/100; return lastWeight()/(h*h); }
+function routineFor(d){
+  const days = S.member.days, idx = TRAIN_MAP[days].indexOf(d);
+  if (idx < 0) return {rest:true};
+  const tp = TEMPL[SPLITS[days][idx]], g = GOALS[S.member.goal];
+  let sets = g.sets; if (S.member.level === 'principiante') sets = Math.max(2, sets-1); if (S.member.level === 'avanzado') sets = Math.min(5, sets+1);
+  return {title:tp.t, fin:g.fin, ex:tp.e.map(n => ({n, sets, reps:REPS_OVERRIDE[n] || g.reps, rest:g.rest}))};
+}
+function dateOfWeekday(d){ const t = today(); return addDays(t, d - wd(t)); }
+function qty(q,u,s){ if (u === 'pza') return Math.max(.5, Math.round(q*s*2)/2); return Math.max(5, Math.round(q*s/5)*5); }
+function fmtQty(v,u){ const n = Number.isInteger(v) ? v : v.toFixed(1).replace('.0',''); return u === 'pza' ? n + (v === 1 ? ' pieza' : ' piezas') : n + ' ' + u; }
+function mealsFor(d){
+  const pick = [['Desayuno','7:30',M_DES[d]],['Colación','11:00',M_COL[d%4]],['Comida','14:30',M_COM[d]],['Colación','17:30',M_COL[(d+2)%4]],['Cena','20:30',M_CEN[d]]];
+  const s = Math.max(.6, kcalTarget()/pick.reduce((a,x) => a + x[2].k, 0));
+  return pick.map(([slot,time,m]) => ({slot,time,n:m.n,items:m.i.map(([l,q,u]) => ({l,u,q:qty(q,u,s)})),k:Math.round(m.k*s),p:Math.round(m.p*s),c:Math.round(m.c*s),f:Math.round(m.f*s)}));
+}
+function nextClassDate(c){
+  const t = today(); let diff = (c.day - wd(t) + 7) % 7;
+  if (diff === 0) { const [h,mi] = c.time.split(':').map(Number); const now = new Date(); if (now.getHours()*60+now.getMinutes() > h*60+mi) diff = 7; }
+  return addDays(t, diff);
+}
+function hash(s){ let h = 0; for (const ch of s) h = (h*31 + ch.charCodeAt(0)) >>> 0; return h; }
+function taken(c,dateStr){ return Math.floor((hash(c.id+dateStr) % 100)/100 * c.cap * .85); }
+function isActive(){ return daysLeft() > 0; }
+
+/* ---------- UI helpers ---------- */
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+function dlg(html, cls=''){ const d = $('#dlg'); d.className = cls; d.innerHTML = html; if (!d.open) d.showModal(); }
+function closeDlg(){ const d = $('#dlg'); if (d.open) d.close(); }
+function go(v){ if (v !== 'registro' && !NAV.some(n => n[0] === v)) v = 'inicio'; view = v; closeDlg(); if (v === 'admin' && !adminLoaded) loadAdmin(); render(); window.scrollTo(0,0); }
+
+function barbell(fraction, st, animate){
+  const n = fraction <= 0 ? 0 : Math.max(1, Math.ceil(fraction*4));
+  const col = st === 'bad' ? 'var(--red)' : st === 'warn' ? 'var(--yellow)' : 'var(--green)';
+  const H = [86,78,68,58];
+  let plates = '';
+  for (let k = 0; k < 4; k++) {
+    const show = k < n, h = H[k], y = 50 - h/2;
+    const xl = 92 - k*17, xr = 314 + k*17;
+    const st2 = show ? '' : (animate ? 'opacity:0' : 'opacity:.12');
+    const fill = show ? col : 'var(--line)';
+    plates += `<rect class="plate" x="${xl}" y="${y}" width="14" height="${h}" rx="3" fill="${fill}" style="${st2}"/>`;
+    plates += `<rect class="plate" x="${xr}" y="${y}" width="14" height="${h}" rx="3" fill="${fill}" style="${st2}"/>`;
+  }
+  return `<svg class="barbell" viewBox="0 0 420 100" role="img" aria-label="Barra con ${n} de 4 discos por lado: tiempo restante de tu membresía">
+    <rect x="18" y="46" width="384" height="8" rx="4" fill="var(--muted)"/>
+    <rect x="106" y="40" width="8" height="20" rx="2" fill="var(--ink)"/><rect x="306" y="40" width="8" height="20" rx="2" fill="var(--ink)"/>
+    <rect x="114" y="47" width="192" height="6" fill="var(--ink)" opacity=".35"/>
+    ${plates}</svg>`;
+}
+
+function payAlert(){
+  if (!S.membership) return '';
+  const d = daysLeft(), st = status();
+  if (st === 'ok') return '';
+  const due = fmtDate(parseISO(S.membership.nextDue));
+  const msg = st === 'bad'
+    ? `<strong>Tu membresía está vencida${d < 0 ? ' desde hace ' + Math.abs(d) + (Math.abs(d) === 1 ? ' día' : ' días') : ' hoy'}.</strong>Registra tu pago para seguir entrando y reservando clases.`
+    : `<strong>Tu mensualidad vence en ${d} ${d === 1 ? 'día' : 'días'} (${due}).</strong>Total a pagar: ${money(dueAmount())}.`;
+  return `<div class="alert ${st}" role="alert"><p>${msg}</p><button class="btn sm ${st === 'bad' ? 'danger' : ''}" data-act="pay-open">Pagar ahora</button></div>`;
+}
+
+/* ---------- Vistas ---------- */
+function vRegister(){
+  const pr = regPreset || {};
+  const planSel = pr.plan || 'mensual', goalSel = pr.goal || 'grasa', daysSel = pr.days || 4;
+  const plan = Object.entries(PLANS).map(([k,p]) => `<div class="choice"><input type="radio" name="plan" id="pl-${k}" value="${k}" ${k===planSel?'checked':''}><label for="pl-${k}">${k==='trimestral'?'<span class="badge">Más elegido</span>':''}<b>${p.name}</b><span class="price num">${money(p.price)}</span><span class="small muted">${p.note}</span></label></div>`).join('');
+  const goals = Object.entries(GOALS).map(([k,g]) => `<div class="choice"><input type="radio" name="goal" id="g-${k}" value="${k}" ${k===goalSel?'checked':''}><label for="g-${k}"><b>${g.name}</b></label></div>`).join('');
+  const v = k => pr[k] != null ? `value="${esc(pr[k])}"` : '';
+  return `<div class="reg">
+  <section class="hero">
+    ${logo()}
+    <h1>Ya casi eres parte de Fierros</h1>
+    <p class="lede muted">Crea tu cuenta de socio. Al terminar entras directo a tu app con tu rutina, tu menú y tus avisos de pago.</p>
+    ${barbell(1,'ok',false)}
+    <ul class="features">
+      <li><i style="background:var(--green)"></i><span>Aviso antes de que venza tu mensualidad y registro de pagos.</span></li>
+      <li><i style="background:var(--blue)"></i><span>Rutina día por día con series, repeticiones y cronómetro de descanso.</span></li>
+      <li><i style="background:var(--yellow)"></i><span>Menú diario con calorías calculadas para ti y lista del súper.</span></li>
+      <li><i style="background:var(--red)"></i><span>Reserva de clases, asistencia, peso y un coach para dudas rápidas.</span></li>
+    </ul>
+  </section>
+  <section class="panel">
+    <form id="reg-form" novalidate>
+      <fieldset><legend>Tus datos</legend>
+        <div class="fgrid">
+          <label class="f full">Nombre completo<input name="name" autocomplete="name" required></label>
+          <label class="f">Correo<input name="email" type="email" autocomplete="email" required></label>
+          <label class="f">Teléfono<input name="phone" type="tel" autocomplete="tel" inputmode="tel" required></label>
+          <label class="f">Fecha de nacimiento<input name="birth" type="date" required></label>
+          <label class="f">Sexo<select name="sex"><option value="hombre">Hombre</option><option value="mujer" ${pr.sex==='mujer'?'selected':''}>Mujer</option></select></label>
+          <label class="f">Peso (kg)<input name="weight" type="number" step="0.1" min="30" max="250" inputmode="decimal" ${v('weight')} required></label>
+          <label class="f">Estatura (cm)<input name="height" type="number" min="120" max="230" inputmode="numeric" ${v('height')} required></label>
+        </div>
+      </fieldset>
+      <fieldset><legend>Tu entrenamiento</legend>
+        <div class="choices c3">${goals}</div>
+        <div class="fgrid">
+          <label class="f">Nivel<select name="level">${Object.entries(LEVELS).map(([k,l]) => `<option value="${k}">${l}</option>`).join('')}</select></label>
+          <label class="f">Días por semana<select name="days">${[3,4,5,6].map(n => `<option ${n==daysSel?'selected':''}>${n}</option>`).join('')}</select></label>
+        </div>
+      </fieldset>
+      <fieldset><legend>Membresía</legend>
+        <div class="choices c3">${plan}</div>
+      </fieldset>
+      <fieldset><legend>Servicios opcionales</legend>
+        <label class="check"><input type="checkbox" name="rutina" ${pr.rutina?'checked':''}><span><b>Rutina personalizada</b>, ${money(SERVICES.rutina.price)} al mes</span></label>
+        <label class="f">Plan alimenticio<select name="nutri"><option value="">Sin plan alimenticio</option><option value="nutri_basico" ${pr.nutri==='nutri_basico'?'selected':''}>Básico, ${money(SERVICES.nutri_basico.price)} al mes</option><option value="nutri_pro" ${pr.nutri==='nutri_pro'?'selected':''}>Pro con lista del súper, ${money(SERVICES.nutri_pro.price)} al mes</option></select></label>
+        <label class="check"><input type="checkbox" name="terms" required><span>Acepto el reglamento del gimnasio y el aviso de privacidad.</span></label>
+      </fieldset>
+      <p class="err" id="reg-err" hidden></p>
+      <button class="btn" type="submit">Crear mi cuenta</button>
+    </form>
+  </section></div>`;
+}
+
+function vInicio(){
+  const m = S.member, st = status(), d = daysLeft(), plan = PLANS[S.membership.plan];
+  const frac = Math.max(0, Math.min(1, d/plan.days));
+  const label = st === 'bad' ? 'Membresía vencida' : st === 'warn' ? 'Por vencer' : 'Al corriente';
+  const tag = st === 'bad' ? 'red' : st === 'warn' ? 'yellow' : 'green';
+  const r = S.services.rutina ? routineFor(wd(today())) : null;
+  const doneToday = (S.done[iso(today())] || []).length;
+  let rutinaTxt;
+  if (!S.services.rutina) rutinaTxt = `<p class="muted">Aún no tienes rutina personalizada.</p><button class="link" data-go="planes">Ver servicios</button>`;
+  else if (r.rest) rutinaTxt = `<p><b>Hoy toca descanso.</b> Una caminata de 30 minutos y movilidad suave te ayudan a recuperarte.</p>`;
+  else rutinaTxt = `<p><b>${esc(r.title)}</b></p><div class="progressbar" aria-label="Avance de hoy"><i style="width:${Math.round(doneToday/r.ex.length*100)}%"></i></div><p class="small muted">${doneToday} de ${r.ex.length} ejercicios completados</p><button class="btn sm ghost" data-go="rutina">Abrir rutina de hoy</button>`;
+  let menuTxt;
+  if (!S.services.nutri) menuTxt = `<p class="muted">Aún no tienes plan alimenticio.</p><button class="link" data-go="planes">Ver servicios</button>`;
+  else { const ms = mealsFor(wd(today())); const tot = ms.reduce((a,x) => a+x.k, 0); menuTxt = `<p><b>${tot.toLocaleString('es-MX')} kcal</b> en 5 comidas</p><p class="small muted">Comida: ${esc(ms[2].n)}</p><button class="btn sm ghost" data-go="comidas">Ver menú de hoy</button>`; }
+  const checked = S.checkins.includes(iso(today()));
+  const water = S.water[iso(today())] || 0;
+  const next = CLASSES.map(c => ({c, d:nextClassDate(c)})).filter(x => S.bookings.includes(x.c.id+'|'+iso(x.d))).sort((a,b) => a.d-b.d)[0];
+  return `${payAlert()}
+  <div class="pagehead"><h2>Hola, ${esc(m.name.split(' ')[0])}</h2><p class="muted">${DAYS[wd(today())]} ${fmtShort(today())}</p></div>
+  <div class="stack">
+    <section class="panel membership" aria-labelledby="mem-h">
+      <div class="row between"><h3 id="mem-h">Tu membresía ${plan.name.toLowerCase()}</h3><span class="tag ${tag}">${label}</span></div>
+      <div class="days-left"><b class="num">${Math.max(0,d)}</b><span>${d === 1 ? 'día restante' : 'días restantes'} antes de tu próximo pago</span></div>
+      ${barbell(frac, st, false)}
+      <div class="row between">
+        <dl class="kv"><dt>Vence</dt><dd>${fmtDate(parseISO(S.membership.nextDue))}</dd><dt>Próximo pago</dt><dd class="num">${money(dueAmount())}</dd></dl>
+        <button class="btn ${st === 'bad' ? 'danger' : st === 'warn' ? '' : 'ghost'}" data-act="pay-open">Pagar mensualidad</button>
+      </div>
+    </section>
+    <div class="grid2">
+      <section class="panel stack" style="gap:10px"><h3>Rutina de hoy</h3>${rutinaTxt}</section>
+      <section class="panel stack" style="gap:10px"><h3>Menú de hoy</h3>${menuTxt}</section>
+    </div>
+    <div class="grid2">
+      <section class="panel stack" style="gap:12px">
+        <h3>Asistencia</h3>
+        <p class="muted">${S.checkins.filter(x => x.slice(0,7) === iso(today()).slice(0,7)).length} visitas este mes</p>
+        <button class="btn ${checked ? 'ghost' : ''}" data-act="checkin" ${checked ? 'disabled' : ''}>${checked ? 'Asistencia de hoy registrada' : 'Registrar asistencia de hoy'}</button>
+        ${next ? `<p class="small">Tu próxima clase: <b>${esc(next.c.name)}</b>, ${DAYS[next.c.day].toLowerCase()} ${fmtShort(next.d)} a las ${next.c.time}</p>` : `<button class="link" data-go="clases">Reservar una clase</button>`}
+      </section>
+      <section class="panel stack" style="gap:12px">
+        <div class="row between"><h3>Agua de hoy</h3><span class="small muted num">${water} de 8 vasos</span></div>
+        <div class="glasses">${Array.from({length:8},(_,i) => `<button class="glass ${i<water?'full':''}" data-act="water" data-n="${i+1}" aria-label="${i+1} vasos"></button>`).join('')}</div>
+        <p class="small muted">Toca un vaso para marcar cuántos llevas.</p>
+      </section>
+    </div>
+  </div>`;
+}
+
+function dayPicker(markTrain){
+  const t = wd(today()), train = S.services.rutina ? TRAIN_MAP[S.member.days] : [];
+  return `<div class="days" role="group" aria-label="Día de la semana">${DS.map((l,i) => {
+    const dt = dateOfWeekday(i);
+    return `<button data-act="day" data-d="${i}" aria-pressed="${i===selDay}" class="${i===t?'today':''} ${markTrain && train.includes(i)?'train':''}" aria-label="${DAYS[i]}">${l}<small>${dt.getDate()}</small><span class="dot"></span></button>`; }).join('')}</div>`;
+}
+
+function locked(title, svc){
+  return `<div class="locked"><h3>${title}</h3><p class="muted">Contrata el servicio y lo verás aquí día por día, calculado con tus datos.</p><button class="btn" data-go="planes">Ver ${svc}</button></div>`;
+}
+
+function vRutina(){
+  const head = `<div class="pagehead"><h2>Mi rutina</h2><p class="muted">${GOALS[S.member.goal].name}, nivel ${LEVELS[S.member.level].toLowerCase()}, ${S.member.days} días por semana.</p></div>`;
+  if (!S.services.rutina) return payAlert() + head + locked('Tu rutina personalizada está lista para armarse','la rutina personalizada');
+  const r = routineFor(selDay), dateStr = iso(dateOfWeekday(selDay));
+  let body;
+  if (r.rest) body = `<section class="panel stack" style="gap:10px"><h3>${DAYS[selDay]}: descanso activo</h3><p>Camina 30 minutos y dedica 10 minutos a movilidad de cadera, hombro y espalda. Dormir bien hoy cuenta como entrenamiento.</p></section>`;
+  else {
+    const done = S.done[dateStr] || [];
+    body = `<section class="panel stack" style="gap:12px">
+      <div class="row between"><h3>${esc(r.title)}</h3><span class="small muted num">${done.length} de ${r.ex.length}</span></div>
+      <div class="progressbar"><i style="width:${Math.round(done.length/r.ex.length*100)}%"></i></div>
+      <ul class="exlist">${r.ex.map((e,i) => `<li class="ex ${done.includes(i)?'done':''}">
+        <button class="tick" data-act="ex" data-i="${i}" data-date="${dateStr}" aria-pressed="${done.includes(i)}" aria-label="Marcar ${esc(e.n)} como hecho">${ic('check')}</button>
+        <div><div class="exname">${esc(e.n)}</div><div class="exmeta num">${e.sets} series de ${e.reps}, descanso ${e.rest} s</div></div>
+        <button class="btn sm ghost" data-act="rest" data-s="${e.rest}" aria-label="Iniciar descanso de ${e.rest} segundos">${ic('timer')}<span class="num">${e.rest}s</span></button>
+      </li>`).join('')}</ul>
+      ${r.fin ? `<div class="finisher">${esc(r.fin)}</div>` : ''}
+      <p class="small muted">Calienta 5 a 10 minutos antes de empezar. Usa un peso que te deje 1 o 2 repeticiones en reserva al final de cada serie.</p>
+    </section>`;
+  }
+  return payAlert() + head + dayPicker(true) + body;
+}
+
+function vComidas(){
+  const head = `<div class="pagehead"><h2>Mi plan de comidas</h2><p class="muted">${S.services.nutri ? `Meta diaria aproximada: <b class="num">${kcalTarget().toLocaleString('es-MX')} kcal</b> para ${GOALS[S.member.goal].name.toLowerCase()}.` : 'Menú diario calculado con tu peso, estatura, edad y objetivo.'}</p></div>`;
+  if (!S.services.nutri) return payAlert() + head + locked('Tu menú de la semana te espera','los planes alimenticios');
+  const pro = S.services.nutri === 'nutri_pro', ms = mealsFor(selDay);
+  const T = ms.reduce((a,m) => ({k:a.k+m.k,p:a.p+m.p,c:a.c+m.c,f:a.f+m.f}), {k:0,p:0,c:0,f:0});
+  const pk = T.p*4, ck = T.c*4, fk = T.f*9, sum = pk+ck+fk;
+  const totals = pro ? `<div class="stack" style="gap:8px"><div class="macrobar" aria-hidden="true"><i style="flex:${pk};background:var(--blue)"></i><i style="flex:${ck};background:var(--yellow)"></i><i style="flex:${fk};background:var(--green)"></i></div>
+    <div class="legend num"><span style="--c:var(--blue)">Proteína ${T.p} g (${Math.round(pk/sum*100)}%)</span><span style="--c:var(--yellow)">Carbohidratos ${T.c} g (${Math.round(ck/sum*100)}%)</span><span style="--c:var(--green)">Grasa ${T.f} g (${Math.round(fk/sum*100)}%)</span></div></div>` : '';
+  return payAlert() + head + dayPicker(false) + `<div class="stack">
+    <section class="panel stack" style="gap:14px">
+      <div class="row between"><h3>${DAYS[selDay]}</h3><span class="tag blue num">${T.k.toLocaleString('es-MX')} kcal</span></div>
+      ${totals}
+      <div>${ms.map(m => `<article class="meal"><header><div><span class="slot">${m.slot}, ${m.time}</span><h4>${esc(m.n)}</h4></div><span class="small num muted">${m.k} kcal</span></header>
+        <dl class="items">${m.items.map(it => `<dt>${fmtQty(it.q,it.u)}</dt><dd>${esc(it.l)}</dd>`).join('')}</dl>
+        ${pro ? `<div class="macros num"><span>P ${m.p} g</span><span>C ${m.c} g</span><span>G ${m.f} g</span></div>` : ''}</article>`).join('')}</div>
+      <p class="small muted">Bebe agua natural a lo largo del día. Si tienes alguna condición médica, valida este plan con tu nutriólogo.</p>
+    </section>
+    ${pro ? shopList() : `<section class="panel flat row between"><p>La <b>lista del súper semanal</b> y los macros por comida vienen con el plan Pro.</p><button class="btn sm ghost" data-go="planes">Mejorar a Pro</button></section>`}
+  </div>`;
+}
+function shopList(){
+  const agg = {};
+  for (let d = 0; d < 7; d++) for (const m of mealsFor(d)) for (const it of m.items) { const k = it.l+'|'+it.u; agg[k] = (agg[k]||0) + it.q; }
+  const rows = Object.entries(agg).sort((a,b) => a[0].localeCompare(b[0],'es')).map(([k,v]) => {
+    const [l,u] = k.split('|'); let txt;
+    if (u === 'pza') txt = Math.ceil(v) + (Math.ceil(v) === 1 ? ' pieza' : ' piezas');
+    else if (v >= 1000) txt = (Math.round(v/100)/10).toString() + (u === 'g' ? ' kg' : ' l');
+    else txt = Math.round(v/10)*10 + ' ' + u;
+    return `<li><label><input type="checkbox"><span>${esc(l)}</span></label><span class="num muted small">${txt}</span></li>`;
+  }).join('');
+  return `<section class="panel"><h3 style="margin-bottom:8px">Lista del súper de la semana</h3><ul class="list shop">${rows}</ul></section>`;
+}
+
+function vClases(){
+  const by = {};
+  CLASSES.map(c => ({c, dt:nextClassDate(c)})).sort((a,b) => a.dt - b.dt || a.c.time.localeCompare(b.c.time)).forEach(x => { (by[iso(x.dt)] = by[iso(x.dt)] || []).push(x.c); });
+  const groups = Object.entries(by).map(([k,arr]) => ({d:wd(parseISO(k)), dt:parseISO(k), arr}));
+  return payAlert() + `<div class="pagehead"><h2>Clases grupales</h2><p class="muted">Reserva tu lugar para la próxima fecha de cada clase. Puedes cancelar hasta una hora antes.</p></div>
+  <div class="stack">${groups.map(g => `<section class="panel"><h3 style="margin-bottom:6px">${iso(g.dt)===iso(today())?'Hoy':DAYS[g.d]} ${fmtShort(g.dt)}</h3>${g.arr.map(c => {
+    const dt = iso(nextClassDate(c)), key = c.id+'|'+dt, mine = S.bookings.includes(key), occ = taken(c,dt) + (mine?1:0), free = c.cap - occ;
+    return `<div class="cls"><time>${c.time}</time><div><b>${esc(c.name)}</b><div class="spots num">Con ${esc(c.coach)}, ${free} ${free===1?'lugar libre':'lugares libres'} de ${c.cap}</div></div>
+      <button class="btn sm ${mine?'ghost':''}" data-act="book" data-k="${key}" ${!mine && free<=0?'disabled':''}>${mine?'Cancelar':'Reservar'}</button></div>`; }).join('')}</section>`).join('')}</div>`;
+}
+
+function weightChart(){
+  const w = S.weights;
+  if (w.length < 2) return `<p class="muted small">Registra tu peso al menos dos veces para ver tu gráfica.</p>`;
+  const pts = w.slice(-12), W = 560, H = 180, P = 34;
+  const vals = pts.map(p => p.kg), mn = Math.min(...vals) - 1, mx = Math.max(...vals) + 1;
+  const x = i => P + i*(W-2*P)/(pts.length-1), y = v => H-P - (v-mn)/(mx-mn)*(H-2*P);
+  const line = pts.map((p,i) => `${x(i).toFixed(1)},${y(p.kg).toFixed(1)}`).join(' ');
+  return `<div class="chartwrap"><svg viewBox="0 0 ${W} ${H}" style="min-width:420px;width:100%" role="img" aria-label="Gráfica de peso de los últimos registros">
+    <line x1="${P}" x2="${W-P}" y1="${H-P}" y2="${H-P}" stroke="var(--line)"/>
+    <text x="4" y="${y(mx-1)+4}" font-size="12" fill="var(--muted)">${(mx-1).toFixed(1)}</text>
+    <text x="4" y="${y(mn+1)+4}" font-size="12" fill="var(--muted)">${(mn+1).toFixed(1)}</text>
+    <polyline points="${line}" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map((p,i) => `<circle cx="${x(i)}" cy="${y(p.kg)}" r="5" fill="var(--surface)" stroke="var(--blue)" stroke-width="2.5"/><text x="${x(i)}" y="${H-12}" font-size="11" text-anchor="middle" fill="var(--muted)">${fmtShort(parseISO(p.date))}</text>`).join('')}
+  </svg></div>`;
+}
+function vProgreso(){
+  const b = bmi(), first = S.weights.length ? S.weights[0].kg : S.member.weight, diff = lastWeight() - first;
+  const bCat = b < 18.5 ? 'Bajo peso' : b < 25 ? 'Peso saludable' : b < 30 ? 'Sobrepeso' : 'Obesidad';
+  const days = Array.from({length:28},(_,i) => addDays(today(), i-27));
+  const month = S.checkins.filter(x => x.slice(0,7) === iso(today()).slice(0,7)).length;
+  let streak = 0; { let w0 = addDays(today(), -wd(today())); for (;;) { const has = S.checkins.some(c => { const d = parseISO(c); return d >= w0 && d < addDays(w0,7); }); if (!has) break; streak++; w0 = addDays(w0,-7); } }
+  return payAlert() + `<div class="pagehead"><h2>Mi progreso</h2><p class="muted">Peso, índice de masa corporal y constancia.</p></div>
+  <div class="stack">
+    <div class="grid2">
+      <section class="panel stack" style="gap:14px">
+        <div class="row" style="gap:28px">
+          <div class="stat"><b class="num">${lastWeight().toFixed(1)}</b><span class="small muted">kg actuales</span></div>
+          <div class="stat"><b class="num">${diff > 0 ? '+' : ''}${diff.toFixed(1)}</b><span class="small muted">kg desde tu registro</span></div>
+          <div class="stat"><b class="num">${b.toFixed(1)}</b><span class="small muted">IMC, ${bCat.toLowerCase()}</span></div>
+        </div>
+        <form id="w-form" class="row" style="gap:8px;display:flex"><label class="sr" for="w-in">Peso de hoy en kg</label><input class="in" id="w-in" name="kg" type="number" step="0.1" min="30" max="250" inputmode="decimal" placeholder="Peso de hoy (kg)" style="flex:1;min-width:140px" required><button class="btn" type="submit">Guardar peso</button></form>
+      </section>
+      <section class="panel stack" style="gap:12px">
+        <div class="row" style="gap:28px"><div class="stat"><b class="num">${month}</b><span class="small muted">visitas este mes</span></div><div class="stat"><b class="num">${streak}</b><span class="small muted">${streak===1?'semana seguida':'semanas seguidas'} entrenando</span></div></div>
+        <div class="heat" aria-label="Asistencia de los últimos 28 días">${days.map(d => `<i class="${S.checkins.includes(iso(d))?'on':''} ${iso(d)===iso(today())?'today':''}" title="${fmtShort(d)}"></i>`).join('')}</div>
+        <p class="small muted">Últimos 28 días. Cada cuadro verde es un día que entrenaste.</p>
+      </section>
+    </div>
+    <section class="panel stack" style="gap:10px"><h3>Evolución de peso</h3>${weightChart()}</section>
+  </div>`;
+}
+
+function vPlanes(){
+  const cur = S.membership.plan, nextP = S.membership.nextPlan || cur;
+  const svcCard = (k) => { const s = SERVICES[k], on = k === 'rutina' ? !!S.services.rutina : S.services.nutri === k;
+    return `<section class="panel svc ${on?'on':''}"><div class="row between"><h3>${s.name}</h3>${on?'<span class="tag green">Contratado</span>':''}</div>
+      <p><span class="price num">${money(s.price)}</span> <span class="muted">al mes</span></p><ul>${s.items.map(x => `<li>${x}</li>`).join('')}</ul>
+      <button class="btn ${on?'ghost':''}" data-act="${on?'svc-off':'svc-on'}" data-k="${k}">${on?'Cancelar servicio':'Contratar'}</button></section>`; };
+  const pays = [...S.membership.payments].reverse();
+  return payAlert() + `<div class="pagehead"><h2>Planes y pagos</h2><p class="muted">Los servicios que contrates se suman a tu próximo pago y se activan al momento.</p></div>
+  <div class="stack">
+    <section class="panel stack" style="gap:14px">
+      <div class="row between"><h3>Tu próximo pago</h3><span class="tag ${status()==='bad'?'red':status()==='warn'?'yellow':'green'} num">${fmtDate(parseISO(S.membership.nextDue))}</span></div>
+      ${breakdown(nextP)}
+      <button class="btn" data-act="pay-open" style="justify-self:start">Pagar ahora</button>
+    </section>
+    <section class="panel stack" style="gap:12px"><h3>Membresía</h3><p class="small muted">El cambio de plan aplica desde tu próximo pago.</p>
+      <div class="choices c3">${Object.entries(PLANS).map(([k,p]) => `<div class="choice"><input type="radio" name="np" id="np-${k}" value="${k}" ${k===nextP?'checked':''} data-act="plan"><label for="np-${k}"><b>${p.name}${k===cur?' (actual)':''}</b><span class="price num">${money(p.price)}</span><span class="small muted">${p.note}</span></label></div>`).join('')}</div>
+    </section>
+    <h3 style="margin-top:6px">Servicios</h3>
+    <div class="grid2">${svcCard('rutina')}${svcCard('nutri_basico')}</div>
+    ${svcCard('nutri_pro')}
+    <section class="panel"><h3 style="margin-bottom:6px">Historial de pagos</h3>
+      ${pays.length ? `<ul class="list">${pays.map(p => `<li><div><b>${esc(p.concept)}</b><div class="small muted">${fmtDate(parseISO(p.date))}, ${esc(p.method)}</div></div><span class="num">${money(p.amount)}</span></li>`).join('')}</ul>` : '<p class="muted">Sin pagos registrados.</p>'}
+    </section>
+  </div>`;
+}
+function breakdown(planKey){
+  const p = PLANS[planKey]; let rows = `<dt>Membresía ${p.name.toLowerCase()}</dt><dd class="num">${money(p.price)}</dd>`;
+  if (S.services.rutina) rows += `<dt>Rutina personalizada × ${p.months}</dt><dd class="num">${money(SERVICES.rutina.price*p.months)}</dd>`;
+  if (S.services.nutri) rows += `<dt>${SERVICES[S.services.nutri].name} × ${p.months}</dt><dd class="num">${money(SERVICES[S.services.nutri].price*p.months)}</dd>`;
+  rows += `<dt><b>Total</b></dt><dd class="num"><b>${money(dueAmount(planKey))}</b></dd>`;
+  return `<dl class="kv" style="grid-template-columns:1fr auto">${rows}</dl>`;
+}
+
+function vCoach(){
+  const head = `<div class="pagehead"><h2>Coach</h2><p class="muted">Pregunta sobre tu rutina, sustituciones de comida o técnica. Conoce tu objetivo y tu plan de hoy.</p></div>`;
+  if (!sampleFn) return payAlert() + head + `<div class="locked"><p>El coach con inteligencia artificial se activa en la versión conectada de la app. En esta demostración no está disponible; tu rutina y tu menú sí.</p></div>`;
+  const qs = ['¿Con qué sustituyo la comida de hoy?','Me molesta la rodilla, ¿cómo ajusto pierna?','Dame una cena alta en proteína','¿Cómo mejoro mi técnica de sentadilla?'];
+  return payAlert() + head + `<section class="panel stack" style="gap:14px">
+    <div class="chat" id="chatlog">${chatHTML()}</div>
+    ${chat.length ? '' : `<div class="quick">${qs.map(q => `<button data-act="coach-q" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>`}
+    ${coachErr ? `<p class="err">${esc(coachErr)}</p>` : ''}
+    <form id="coach-form" class="composer"><label class="sr" for="coach-in">Tu pregunta</label><input class="in" id="coach-in" placeholder="Escribe tu pregunta" autocomplete="off" ${coachBusy?'disabled':''}><button class="btn" type="submit" ${coachBusy?'disabled':''}>Enviar</button></form>
+    <p class="small muted">Orientación general. Ante dolor o una condición médica, consulta a un profesional de la salud.</p>
+  </section>`;
+}
+function chatHTML(){
+  if (!chat.length) return `<p class="muted">Elige una pregunta o escribe la tuya.</p>`;
+  return chat.map(m => `<div class="bubble ${m.role==='user'?'u':'a'}">${esc(m.content || (coachBusy ? 'Pensando…' : ''))}</div>`).join('');
+}
+function coachContext(){
+  const m = S.member, d = wd(today());
+  let ctx = `Eres el coach del gimnasio Fierros Gym en México. Responde en español de México, en máximo 120 palabras, de forma práctica y concreta, sin títulos ni markdown. Si la persona menciona dolor, lesión o una condición médica, da orientación prudente y recomienda consultar a un profesional.\n\nDatos del socio: ${m.sex}, ${age()} años, ${lastWeight()} kg, ${m.height} cm, objetivo ${GOALS[m.goal].name.toLowerCase()}, nivel ${LEVELS[m.level].toLowerCase()}, entrena ${m.days} días por semana.`;
+  if (S.services.rutina) { const r = routineFor(d); ctx += r.rest ? ' Hoy es día de descanso.' : ` Rutina de hoy (${r.title}): ${r.ex.map(e => `${e.n} ${e.sets}x${e.reps}`).join('; ')}.`; }
+  if (S.services.nutri) { const ms = mealsFor(d); ctx += ` Meta diaria ${kcalTarget()} kcal. Menú de hoy: ${ms.map(x => `${x.slot}: ${x.n} (${x.items.map(i => fmtQty(i.q,i.u)+' '+i.l).join(', ')})`).join(' | ')}.`; }
+  return ctx;
+}
+async function coachSend(q){
+  q = q.trim(); if (!q || !sampleFn || coachBusy) return;
+  coachErr = '';
+  chat.push({role:'user',content:q});
+  const msgs = chat.map((m,i) => i === 0 ? {role:'user',content:coachContext() + '\n\nPregunta: ' + m.content} : {role:m.role,content:m.content});
+  const entry = {role:'assistant',content:''}; chat.push(entry); coachBusy = true; render();
+  try {
+    const r = await sampleFn(msgs, {modelTier:'quick', cache:false, onText:({text}) => { entry.content = clean(text); const log = $('#chatlog'); if (log) { log.innerHTML = chatHTML(); log.scrollTop = log.scrollHeight; } }});
+    entry.content = clean(r.text);
+  } catch(e) {
+    chat.splice(-2, 2);
+    coachErr = e && e.code === 'not_granted' ? 'Para usar el coach, permite que esta página use Claude.' : e && e.code === 'rate_limited' ? 'Demasiadas preguntas seguidas. Espera un momento y vuelve a intentarlo.' : 'No llegó la respuesta. Vuelve a enviar tu pregunta.';
+  }
+  coachBusy = false;
+  if (view === 'coach') { render(); const log = $('#chatlog'); if (log) log.scrollTop = log.scrollHeight; }
+}
+const clean = t => String(t || '').replace(/\*\*(.+?)\*\*/g,'$1').replace(/^#+\s*/gm,'').trim();
+
+function vPerfil(){
+  const m = S.member;
+  return `<div class="pagehead"><h2>Mi perfil</h2></div>
+  <div class="stack">
+    <div class="card-id" aria-label="Credencial de socio">
+      <div class="row between">${logo()}<span class="small">${PLANS[S.membership.plan].name}</span></div>
+      <div><div style="font-weight:700;font-size:1.15rem">${esc(m.name)}</div><div class="small" style="opacity:.75">Socio ${esc(m.id)}, desde ${fmtShort(parseISO(m.since))}</div></div>
+      <div class="barcode" aria-hidden="true"><div></div></div>
+      <p class="small" style="opacity:.75">Muestra esta credencial en recepción.</p>
+    </div>
+    <section class="panel">
+      <form id="p-form">
+        <fieldset><legend>Datos personales</legend><div class="fgrid">
+          <label class="f full">Nombre completo<input name="name" value="${esc(m.name)}" required></label>
+          <label class="f">Correo<input name="email" type="email" value="${esc(m.email)}" required></label>
+          <label class="f">Teléfono<input name="phone" type="tel" value="${esc(m.phone)}" required></label>
+          <label class="f">Estatura (cm)<input name="height" type="number" min="120" max="230" value="${esc(m.height)}" required></label>
+          <label class="f">Objetivo<select name="goal">${Object.entries(GOALS).map(([k,g]) => `<option value="${k}" ${k===m.goal?'selected':''}>${g.name}</option>`).join('')}</select></label>
+          <label class="f">Nivel<select name="level">${Object.entries(LEVELS).map(([k,v]) => `<option value="${k}" ${k===m.level?'selected':''}>${v}</option>`).join('')}</select></label>
+          <label class="f">Días por semana<select name="days">${[3,4,5,6].map(n => `<option ${n==m.days?'selected':''}>${n}</option>`).join('')}</select></label>
+        </div></fieldset>
+        <button class="btn" type="submit" style="justify-self:start">Guardar cambios</button>
+      </form>
+    </section>
+    <section class="panel stack" style="gap:12px">
+      <h3>Probar avisos de pago</h3>
+      <p class="small muted">Cambia la fecha de vencimiento para ver cómo se ven los avisos en la app.</p>
+      <div class="row"><button class="btn sm ghost" data-act="demo" data-n="3">Vence en 3 días</button><button class="btn sm ghost" data-act="demo" data-n="0">Vence hoy</button><button class="btn sm ghost" data-act="demo" data-n="-4">Vencida hace 4 días</button><button class="btn sm ghost" data-act="demo" data-n="reset">Restablecer</button></div>
+    </section>
+    <section class="panel stack" style="gap:12px">
+      <h3>Borrar mi cuenta</h3><p class="small muted">Elimina tus datos, pagos, progreso y reservas guardados en esta página.</p>
+      <button class="btn danger" data-act="reset" style="justify-self:start">Borrar mi cuenta</button>
+    </section>
+  </div>`;
+}
+
+const VIEWS = {sitio:vSitio,admin:vAdmin,inicio:vInicio,rutina:vRutina,comidas:vComidas,clases:vClases,progreso:vProgreso,planes:vPlanes,coach:vCoach,perfil:vPerfil};
+
+function renderNav(){
+  $('#side').innerHTML = NAV.map(([k,l]) => `<button data-go="${k}" ${view===k?'aria-current="page"':''}>${ic(k)}<span>${l}</span></button>`).join('');
+  const inTabs = TABS.includes(view);
+  $('#tabs').innerHTML = TABS.map(k => `<button data-go="${k}" ${view===k?'aria-current="page"':''}>${ic(k)}<span>${NAV.find(n=>n[0]===k)[1]}</span></button>`).join('')
+    + `<button data-act="more" ${!inTabs?'aria-current="page"':''}>${ic('mas')}<span>Más</span></button>`;
+}
+function initials(){ if (!S.member) return 'FG'; return S.member.name.split(' ').filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join(''); }
+function renderHeader(mode){
+  const top = $('#top');
+  if (mode === 'site') top.innerHTML = `<button class="logo-btn" data-act="top" aria-label="Fierros Gym, ir arriba">${logo(firstLoad ? 'intro' : '')}</button><nav class="topnav" aria-label="Secciones del sitio">${SITE_LINKS.map(([id,l]) => `<button data-scroll="${id}">${l}</button>`).join('')}</nav><div class="spacer"></div><button class="btn sm yellow hide-sm" data-act="trial">Prueba gratis</button>${adminOk ? `<button class="btn sm light-ghost hide-sm" data-go="admin">Administración</button>` : ''}<button class="btn sm light-ghost" data-act="${S.member ? 'to-app' : 'to-reg'}">${S.member ? 'Mi cuenta' : 'Inscríbete'}</button><button class="round menu-btn" data-act="menu" aria-label="Abrir menú" style="width:40px;height:40px">${ic('menu')}</button>`;
+  else if (mode === 'reg') top.innerHTML = `<button class="logo-btn" data-go="sitio" aria-label="Fierros Gym, volver al sitio">${logo()}</button><div class="spacer"></div><button class="btn sm ghost" data-go="sitio">Volver al sitio</button>`;
+  else top.innerHTML = `<button class="logo-btn" data-go="inicio" aria-label="Fierros Gym, inicio">${logo()}</button><div class="spacer"></div><button class="btn sm ghost hide-sm" data-go="sitio">Ver sitio web</button><button class="avatar" data-go="perfil" aria-label="Mi perfil">${initials()}</button>`;
+}
+function render(){
+  if (!S.member && view !== 'registro' && !(view === 'admin' && adminOk)) view = 'sitio';
+  if (S.member && view === 'registro') view = 'inicio';
+  const mode = view === 'sitio' ? 'site' : view === 'registro' ? 'reg' : 'app';
+  document.body.className = 'mode-' + mode;
+  clearInterval(heroTimer);
+  renderHeader(mode);
+  if (mode === 'site') { $('#view').innerHTML = vSitio(); initSite(); firstLoad = false; }
+  else if (mode === 'reg') $('#view').innerHTML = `<div class="regwrap">${vRegister()}</div>`;
+  else { renderNav(); $('#view').innerHTML = VIEWS[view](); }
+}
+
+/* ---------- Acciones ---------- */
+function openPay(){
+  const k = S.membership.nextPlan || S.membership.plan;
+  dlg(`<form class="dlg" id="pay-form" method="dialog">
+    <h3>Pagar mensualidad</h3>${breakdown(k)}
+    <fieldset><legend style="font-size:1.1rem">Método de pago</legend>
+      <div class="choices">${['Tarjeta de débito o crédito','Transferencia SPEI','Efectivo en recepción'].map((x,i) => `<div class="choice"><input type="radio" name="method" id="mt-${i}" value="${x}" ${i===0?'checked':''}><label for="mt-${i}"><b>${x}</b></label></div>`).join('')}</div>
+    </fieldset>
+    <p class="small muted">Prototipo: no se realiza ningún cargo real.</p>
+    <div class="row end"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn" type="submit">Confirmar pago de ${money(dueAmount(k))}</button></div>
+  </form>`);
+}
+function confirmPay(method){
+  const k = S.membership.nextPlan || S.membership.plan, p = PLANS[k], amt = dueAmount(k);
+  const base = parseISO(S.membership.nextDue) > today() ? parseISO(S.membership.nextDue) : today();
+  S.membership.plan = k; delete S.membership.nextPlan;
+  S.membership.nextDue = iso(addDays(base, p.days));
+  S.membership.payments.push({date:iso(today()),amount:amt,method,concept:'Membresía '+p.name.toLowerCase()+(monthlyServices()?' y servicios':'')});
+  save(); closeDlg(); render(); toast('Pago registrado. Tu membresía vence el ' + fmtDate(parseISO(S.membership.nextDue)) + '.');
+}
+function openMore(){
+  const more = NAV.filter(n => !TABS.includes(n[0]));
+  dlg(`<div class="dlg"><h3>Más secciones</h3><div class="moresheet">${more.map(([k,l]) => `<button data-go="${k}">${ic(k)}${l}</button>`).join('')}</div><div class="row end"><button class="btn ghost" data-act="close">Cerrar</button></div></div>`);
+}
+let timerInt = null, timerEnd = 0;
+function startRest(s){
+  timerEnd = Date.now() + s*1000; const el = $('#timer'); el.classList.add('on');
+  clearInterval(timerInt);
+  const tick = () => { const left = Math.max(0, Math.round((timerEnd - Date.now())/1000));
+    el.innerHTML = `${ic('timer')}<span>Descanso ${Math.floor(left/60)}:${pad(left%60)}</span>`;
+    el.setAttribute('aria-label', `Descanso, quedan ${left} segundos. Toca para detener.`);
+    if (left <= 0) { clearInterval(timerInt); el.innerHTML = `${ic('check')}<span>¡A la siguiente serie!</span>`; try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e) {} setTimeout(() => el.classList.remove('on'), 3000); } };
+  tick(); timerInt = setInterval(tick, 500);
+}
+
+document.addEventListener('click', e => {
+  const sc = e.target.closest('[data-scroll]');
+  if (sc) { closeDlg(); const el = document.getElementById(sc.dataset.scroll); if (el) el.scrollIntoView({behavior:reduced() ? 'auto' : 'smooth', block:'start'}); return; }
+  const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const act = a.dataset.act;
+  if (act === 'plan') return; // manejado en change
+  switch (act) {
+    case 'close': closeDlg(); break;
+    case 'more': openMore(); break;
+    case 'pay-open': openPay(); break;
+    case 'day': selDay = Number(a.dataset.d); render(); break;
+    case 'ex': { const k = a.dataset.date, i = Number(a.dataset.i), arr = S.done[k] || (S.done[k] = []);
+      const at = arr.indexOf(i); if (at >= 0) arr.splice(at,1); else arr.push(i);
+      const r = routineFor(selDay); save(); render();
+      if (at < 0 && r.ex && arr.length === r.ex.length) toast('Rutina completa. Buen trabajo.');
+      break; }
+    case 'rest': startRest(Number(a.dataset.s)); break;
+    case 'checkin':
+      if (!isActive()) { toast('Tu membresía está vencida. Registra tu pago para entrar.'); break; }
+      if (!S.checkins.includes(iso(today()))) S.checkins.push(iso(today()));
+      save(); render(); toast('Asistencia registrada.'); break;
+    case 'water': { const n = Number(a.dataset.n), k = iso(today()); S.water[k] = S.water[k] === n ? n-1 : n; save(); render(); break; }
+    case 'book': { const k = a.dataset.k, at = S.bookings.indexOf(k);
+      if (at >= 0) { S.bookings.splice(at,1); save(); render(); toast('Reserva cancelada.'); break; }
+      if (!isActive()) { toast('Tu membresía está vencida. Registra tu pago para reservar.'); break; }
+      S.bookings.push(k); save(); render(); toast('Lugar reservado.'); break; }
+    case 'svc-on': { const k = a.dataset.k;
+      if (k === 'rutina') S.services.rutina = true; else S.services.nutri = k;
+      save(); render(); toast(SERVICES[k].name + ' activado. Se suma a tu próximo pago.'); break; }
+    case 'svc-off': { const k = a.dataset.k;
+      if (k === 'rutina') delete S.services.rutina; else delete S.services.nutri;
+      save(); render(); toast('Servicio cancelado.'); break; }
+    case 'demo': { const n = a.dataset.n;
+      if (n === 'reset') { const last = S.membership.payments[S.membership.payments.length-1]; const p = PLANS[S.membership.plan]; S.membership.nextDue = iso(addDays(parseISO(last ? last.date : S.member.since), p.days)); }
+      else S.membership.nextDue = iso(addDays(today(), Number(n)));
+      save(); go('inicio'); break; }
+    case 'reset':
+      dlg(`<div class="dlg"><h3>¿Borrar tu cuenta?</h3><p>Se eliminan tus datos, pagos, progreso y reservas. No se puede deshacer.</p><div class="row end"><button class="btn ghost" data-act="close">Conservar mi cuenta</button><button class="btn danger" data-act="reset-ok">Borrar mi cuenta</button></div></div>`); break;
+    case 'reset-ok': S = blank(); chat = []; save(); if (memRef) { try { memRef.set({deleted:true, updatedAt:Date.now()}); } catch(e) {} } closeDlg(); view = 'sitio'; render(); toast('Cuenta borrada.'); break;
+    case 'coach-q': coachSend(a.dataset.q); break;
+    case 'top': window.scrollTo({top:0, behavior:reduced() ? 'auto' : 'smooth'}); break;
+    case 'menu': openMenu(); break;
+    case 'trial': openTrial(); break;
+    case 'to-app': go('inicio'); break;
+    case 'to-reg': regPreset = {plan:cfg.plan, rutina:cfg.rutina, nutri:cfg.nutri}; go('registro'); break;
+    case 'car-go': case 'car-prev': case 'car-next': {
+      const car = a.closest('[data-car]'); const i = act === 'car-go' ? Number(a.dataset.i) : carIndex(car) + (act === 'car-next' ? 1 : -1);
+      carGo(car, i); if (car.dataset.car === 'hero') heroStart(); break; }
+    case 'car-pause': heroPaused = !heroPaused; a.innerHTML = ic(heroPaused ? 'play' : 'pause'); a.setAttribute('aria-label', heroPaused ? 'Reanudar carrusel' : 'Pausar carrusel'); heroStart(); break;
+    case 'rail-prev': railMove(a, -1); break;
+    case 'rail-next': railMove(a, 1); break;
+    case 'lb': openLb(Number(a.dataset.i)); break;
+    case 'lb-prev': openLb(lbI - 1); break;
+    case 'lb-next': openLb(lbI + 1); break;
+    case 'phone-go': carGo(document.querySelector('[data-car="phone"]'), Number(a.dataset.i)); break;
+    case 'sday': siteDay = Number(a.dataset.d); $('#site-classes').innerHTML = siteClasses(); break;
+    case 'scoach': { siteCoach = a.dataset.k; const t = wd(today()); const ds = CLASSES.filter(c => c.coach === siteCoach).map(c => c.day).sort((x,y) => ((x-t+7)%7) - ((y-t+7)%7)); if (ds.length) siteDay = ds[0];
+      $('#site-classes').innerHTML = siteClasses(); document.getElementById('s-clases').scrollIntoView({behavior:reduced() ? 'auto' : 'smooth'}); break; }
+    case 'scoach-clear': siteCoach = ''; $('#site-classes').innerHTML = siteClasses(); break;
+    case 'sbook': if (S.member) go('clases'); else openTrial(a.dataset.n); break;
+    case 'cfg-go': if (S.member) { go('planes'); break; } regPreset = {plan:cfg.plan, rutina:cfg.rutina, nutri:cfg.nutri}; go('registro'); break;
+    case 'cgoal': case 'cdays':
+      if (act === 'cgoal') calc.goal = a.dataset.k; else calc.days = Number(a.dataset.k);
+      a.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === a)));
+      $('#calc-out').innerHTML = calcOut(); break;
+    case 'adm-tab': adminTab = a.dataset.t; if (view !== 'admin') { go('admin'); break; } document.querySelectorAll('[data-act="adm-tab"][data-t]').forEach(b => { if (b.closest('.chips')) b.setAttribute('aria-pressed', String(b.dataset.t === adminTab)); }); $('#adm-body').innerHTML = ADM[adminTab](); window.scrollTo(0,0); break;
+    case 'adm-filter': admFilter = a.dataset.f; $('#adm-body').innerHTML = ADM.cobranza(); break;
+    case 'adm-pay': openAdmPay(a.dataset.uid); break;
+    case 'adm-lead': admLead(Number(a.dataset.i), a.dataset.s); break;
+    case 'adm-csv': admCsv(); break;
+    case 'adm-toggle': adminDemo = !useDemo(); render(); break;
+    case 'adm-logout': adminUnlocked = false; try { sessionStorage.removeItem('fg-admin'); } catch(e) {} go('sitio'); toast('Sesión cerrada.'); break;
+    case 'calc-go': regPreset = {plan:cfg.plan, rutina:cfg.rutina, nutri:cfg.nutri || 'nutri_basico', sex:calc.sex, weight:calc.weight, height:calc.height, goal:calc.goal, days:calc.days};
+      if (S.member) { go('planes'); break; } go('registro'); break;
+  }
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.act === 'adm-search') { admSearch = el.value; const ul = $('#adm-body .soc'); if (ul) { const tmp = document.createElement('div'); tmp.innerHTML = ADM.socios(); ul.innerHTML = tmp.querySelector('.soc').innerHTML; } return; } if (!el.dataset || el.dataset.calc === undefined) return;
+  calc[el.name] = el.name === 'sex' ? el.value : Number(el.value);
+  const out = $('#calc-out'); if (out) out.innerHTML = calcOut();
+});
+document.addEventListener('change', e => {
+  const c = e.target.dataset && e.target.dataset.cfg;
+  if (c) { if (c === 'plan') cfg.plan = e.target.value; else if (c === 'rutina') cfg.rutina = e.target.checked; else cfg.nutri = e.target.value;
+    const sum = $('#cfg-sum'); if (sum) sum.innerHTML = cfgSummary(); return; }
+  if (e.target.dataset && e.target.dataset.act === 'plan') {
+    const k = e.target.value; if (k === S.membership.plan) delete S.membership.nextPlan; else S.membership.nextPlan = k;
+    save(); render(); toast(k === S.membership.plan ? 'Conservas tu plan actual.' : 'Desde tu próximo pago tendrás el plan ' + PLANS[k].name.toLowerCase() + '.');
+  }
+});
+document.addEventListener('submit', e => {
+  const f = e.target; e.preventDefault();
+  const fd = new FormData(f);
+  if (f.id === 'reg-form') {
+    const err = $('#reg-err'); const need = ['name','email','phone','birth','weight','height'];
+    const miss = need.filter(k => !String(fd.get(k) || '').trim());
+    let msg = '';
+    if (miss.length) msg = 'Completa todos tus datos para crear tu cuenta.';
+    else if (!/^\S+@\S+\.\S+$/.test(fd.get('email'))) msg = 'Escribe un correo válido, por ejemplo nombre@correo.com.';
+    else if (!fd.get('terms')) msg = 'Acepta el reglamento para continuar.';
+    else { const b = parseISO(fd.get('birth')); const a = (today()-b)/31557600000; if (!(a >= 14 && a < 100)) msg = 'Revisa tu fecha de nacimiento: necesitas tener al menos 14 años.'; }
+    if (msg) { err.textContent = msg; err.hidden = false; err.scrollIntoView({block:'center',behavior:'smooth'}); return; }
+    const plan = fd.get('plan');
+    S = blank();
+    S.member = {id:'FG-' + String(Date.now()).slice(-6), since:iso(today()), name:fd.get('name').trim(), email:fd.get('email').trim(), phone:fd.get('phone').trim(), birth:fd.get('birth'), sex:fd.get('sex'), weight:Number(fd.get('weight')), height:Number(fd.get('height')), goal:fd.get('goal'), level:fd.get('level'), days:Number(fd.get('days'))};
+    if (fd.get('rutina')) S.services.rutina = true;
+    if (fd.get('nutri')) S.services.nutri = fd.get('nutri');
+    const amt = PLANS[plan].price + monthlyServices()*PLANS[plan].months;
+    S.membership = {plan, nextDue:iso(addDays(today(), PLANS[plan].days)), payments:[{date:iso(today()),amount:amt,method:'Recepción',concept:'Inscripción, membresía ' + PLANS[plan].name.toLowerCase()}]};
+    S.weights = [{date:iso(today()),kg:S.member.weight}];
+    save(); regPreset = {}; view = 'inicio'; render(); window.scrollTo(0,0); toast('Bienvenido a Fierros Gym, ' + S.member.name.split(' ')[0] + '.');
+  } else if (f.id === 'pay-form') {
+    confirmPay(fd.get('method'));
+  } else if (f.id === 'w-form') {
+    const kg = Number(fd.get('kg')); if (!(kg >= 30 && kg <= 250)) { toast('Escribe un peso entre 30 y 250 kg.'); return; }
+    const k = iso(today()), ex = S.weights.find(w => w.date === k);
+    if (ex) ex.kg = kg; else S.weights.push({date:k,kg});
+    save(); render(); toast('Peso guardado.');
+  } else if (f.id === 'p-form') {
+    Object.assign(S.member, {name:fd.get('name').trim() || S.member.name, email:fd.get('email').trim(), phone:fd.get('phone').trim(), height:Number(fd.get('height')) || S.member.height, goal:fd.get('goal'), level:fd.get('level'), days:Number(fd.get('days'))});
+    save(); render(); toast('Cambios guardados. Tu rutina y tu menú se recalcularon.');
+  } else if (f.id === 'trial-form') {
+    const n = String(fd.get('n') || '').trim(), t = String(fd.get('t') || '').replace(/\D/g,'');
+    const err = $('#trial-err');
+    if (!n || t.length < 10) { err.textContent = !n ? 'Escribe tu nombre.' : 'Escribe un WhatsApp de 10 dígitos.'; err.hidden = false; return; }
+    saveLead({name:n, phone:t, date:fd.get('d'), interest:fd.get('i'), createdAt:Date.now(), status:'pendiente'});
+    const d = parseISO(fd.get('d')), msg = `Hola, soy ${n}. Quiero agendar mi día de prueba gratis en Fierros Gym el ${DAYS[wd(d)].toLowerCase()} ${fmtShort(d)}. Me interesa: ${fd.get('i')}. Mi número: ${t}.`;
+    dlg(`<div class="dlg"><div style="font-size:3rem;line-height:1">🏋️</div><h3>¡Listo, ${esc(n.split(' ')[0])}!</h3><p>Te esperamos el <b>${DAYS[wd(d)].toLowerCase()} ${fmtShort(d)}</b>. Envía tu solicitud por WhatsApp para confirmar tu horario.</p><a class="btn" style="background:#25D366;border-color:#25D366;color:#fff" href="${wa(msg)}" target="_blank" rel="noopener">${ic('wa')}Confirmar por WhatsApp</a><button class="btn ghost" data-act="close">Cerrar</button></div>`);
+  } else if (f.id === 'adm-login-form') {
+    const err = $('#adm-login-err');
+    if (!(window.crypto && crypto.subtle)) { err.textContent = 'Abre la página desde su dirección https para entrar al panel.'; err.hidden = false; return; }
+    sha256(String(fd.get('p') || '')).then(h => {
+      if (h === ADMIN_HASH) { adminUnlocked = true; try { sessionStorage.setItem('fg-admin','1'); } catch(e) {} loadAdmin(); render(); window.scrollTo(0,0); }
+      else { err.textContent = 'Contraseña incorrecta.'; err.hidden = false; f.elements.namedItem('p').value = ''; f.elements.namedItem('p').focus(); }
+    });
+  } else if (f.id === 'adm-pay-form') {
+    admPay(f.dataset.uid, fd.get('method'));
+  } else if (f.id === 'calc-form') {
+    return;
+  } else if (f.id === 'coach-form') {
+    const inp = $('#coach-in'); const q = inp.value; inp.value = ''; coachSend(q);
+  }
+});
+$('#timer').addEventListener('click', () => { clearInterval(timerInt); $('#timer').classList.remove('on'); });
+$('#dlg').addEventListener('click', e => { if (e.target.id === 'dlg') closeDlg(); });
+$('#dlg').addEventListener('close', () => { $('#dlg').className = ''; });
+document.addEventListener('keydown', e => { const d = $('#dlg'); if (d.open && d.classList.contains('lb')) { if (e.key === 'ArrowRight') openLb(lbI + 1); if (e.key === 'ArrowLeft') openLb(lbI - 1); } });
+let lbX = null;
+$('#dlg').addEventListener('pointerdown', e => { lbX = e.clientX; });
+$('#dlg').addEventListener('pointerup', e => { const d = $('#dlg'); if (lbX === null || !d.classList.contains('lb')) return; const dx = e.clientX - lbX; lbX = null; if (Math.abs(dx) > 50) openLb(lbI + (dx < 0 ? 1 : -1)); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && view === 'sitio') heroStart(); });
+
+/* ---------- Arranque ---------- */
+const h = (location.hash || '').slice(1);
+view = S.member ? 'inicio' : 'sitio';
+if (VIEWS[h] || h === 'registro') view = h;
+window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (VIEWS[v] || v === 'registro') go(v); });
+render();
+
+(async () => {
+  if (!window.claude || !window.claude.use) { standalone = true; adminOk = true; try { adminUnlocked = sessionStorage.getItem('fg-admin') === '1'; } catch(e) {} if (!NAV.some(n => n[0] === 'admin')) NAV.push(['admin','Administración']); if (h === 'admin') view = 'admin'; render(); return; }
+  try {
+    const [db, user, dl] = await Promise.all([window.claude.use('db'), window.claude.use('user'), window.claude.use('downloads')]);
+    dbCap = db; userCap = user; downloadsCap = dl;
+    if (user) { try { adminOk = !!(await user.isOwner()); } catch(e) {} if (adminOk && !NAV.some(n => n[0] === 'admin')) NAV.push(['admin','Administración']); }
+    if (db && user) {
+      const id = await user.id();
+      if (id) {
+        myId = id;
+        const ref = db.doc('data/users/' + id + '/gym');
+        const snap = await ref.get();
+        dbRef = ref; memRef = db.doc('members/' + id);
+        if (snap.exists) { const d = snap.data(); if (d && d.json) { S = Object.assign(blank(), JSON.parse(d.json)); try { localStorage.setItem(KEY, d.json); } catch(e) {} } }
+        else if (S.member) flush();
+        try { const ms = await memRef.get(); const r = ms.exists ? ms.data() : null;
+          if (r && r.adminVersion && r.adminVersion !== (S.adminVersion || 0) && S.membership) { S.membership.nextDue = r.nextDue; S.membership.payments = r.payments || S.membership.payments; S.adminVersion = r.adminVersion; save(); toast('Se registró un pago en recepción. Tu membresía vence el ' + fmtDate(parseISO(S.membership.nextDue)) + '.'); }
+        } catch(e) {}
+      }
+    }
+    if (adminOk && h === 'admin') { view = 'admin'; loadAdmin(); }
+    render();
+  } catch(e) {}
+})();
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  try { sampleFn = await window.claude.use('sample'); if (sampleFn && view === 'coach' && S.member) render(); } catch(e) {}
+})();
+})();
+</script>
+</body>
+</html>
